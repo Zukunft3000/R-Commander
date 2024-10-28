@@ -312,6 +312,11 @@ module.exports = async (client, interaction) => {
         const tracker = instance.trackers[ids.trackerId];
         const id = interaction.fields.getTextInputValue('TrackerAddPlayerId');
 
+        if (!/^[0-9]+$/.test(id)) {
+            interaction.deferUpdate();
+            return;
+        }
+        
         if (!tracker) {
             interaction.deferUpdate();
             return;
@@ -370,6 +375,11 @@ module.exports = async (client, interaction) => {
 
         const isSteamId64 = id.length === Constants.STEAMID64_LENGTH ? true : false;
 
+        if (!/^[0-9]+$/.test(id)) {
+            interaction.deferUpdate();
+            return;
+        }
+        
         if (!tracker) {
             interaction.deferUpdate();
             return;
