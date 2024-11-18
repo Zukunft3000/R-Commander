@@ -86,20 +86,23 @@ process.on('unhandledRejection', error => {
     console.log(error);
 });
 */
-process.on('unhandledRejection', error => {
-    // Получаем стек вызовов из ошибки
-    const stack = error.stack.split('\n');
-    
-    // Извлекаем информацию о файле и строке
-    const location = stack[1] ? stack[1].trim() : 'Unknown location';
+process.on('unhandledRejection', (error: unknown) => {
+    // Приводим тип error к Error, чтобы получить доступ к свойству stack
+    if (error instanceof Error) {
+        const stack = error.stack ? error.stack.split('\n') : [];
+        const location = stack[1] ? stack[1].trim() : 'Unknown location';
 
-    // Логируем ошибку с указанием места возникновения
-    client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'unhandledRejection', {
-        error: error
-    }), 'error');
+        client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'unhandledRejection', {
+            error: error.message,
+            location: location
+        }), 'error');
 
-    // Выводим ошибку в консоль
-    console.log(`Unhandled Rejection at: ${location}`);
-    console.log(error);
+        console.log(`Unhandled Rejection at: ${location}`);
+        console.log(error);
+    } else {
+        // Если error не является экземпляром Error, просто логируем его
+        client.log(client.intlGet(null, 'errorCap'), `Unhandled Rejection: ${String(error)}`, 'error');
+        console.log(`Unhandled Rejection: ${String(error)}`);
+    }
 });
 exports.client = client;
