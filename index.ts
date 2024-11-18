@@ -78,12 +78,29 @@ function checkForUpdates() {
     });
 }
 
-
+/*
 process.on('unhandledRejection', error => {
     client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'unhandledRejection', {
         error: error
     }), 'error');
     console.log(error);
 });
+*/
+process.on('unhandledRejection', error => {
+    // Получаем стек вызовов из ошибки
+    const stack = error.stack.split('\n');
+    
+    // Извлекаем информацию о файле и строке
+    const location = stack[1] ? stack[1].trim() : 'Unknown location';
 
+    // Логируем ошибку с указанием места возникновения
+    client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'unhandledRejection', {
+        error: error.message,
+        location: location
+    }), 'error');
+
+    // Выводим ошибку в консоль
+    console.log(`Unhandled Rejection at: ${location}`);
+    console.log(error);
+});
 exports.client = client;
