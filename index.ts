@@ -95,8 +95,7 @@ process.on('unhandledRejection', error => {
 
     // Логируем ошибку с указанием места возникновения
     client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'unhandledRejection', {
-        error: error.message,
-        location: location
+        error: error
     }), 'error');
 
     // Выводим ошибку в консоль
