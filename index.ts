@@ -59,7 +59,7 @@ function createMissingDirectories() {
         Fs.mkdirSync(Path.join(__dirname, 'maps'));
     }
 }
-
+/*
 function checkForUpdates() {
     const remote = 'https://raw.githubusercontent.com/alexemanuelol/rustplusplus/main/package.json';
     const local = require('./package.json');
@@ -77,7 +77,7 @@ function checkForUpdates() {
         console.log(error);
     });
 }
-
+*/
 /*
 process.on('unhandledRejection', error => {
     client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'unhandledRejection', {
