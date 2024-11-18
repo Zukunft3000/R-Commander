@@ -57,6 +57,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${setting.discord}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, setting.discord)
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getNotificationButtons(
@@ -71,11 +72,11 @@ module.exports = async (client, interaction) => {
         client.setInstance(guildId, instance);
 
         if (rustplus) rustplus.notificationSettings[ids.setting].inGame = setting.inGame;
-
         client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'buttonValueChange', {
             id: `${verifyId}`,
             value: `${setting.inGame}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, setting.inGame)
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getNotificationButtons(
@@ -95,6 +96,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${setting.voice}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, setting.voice)
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getNotificationButtons(
@@ -111,6 +113,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.inGameCommandsEnabled}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.inGameCommandsEnabled)
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getInGameCommandsEnabledButton(guildId,
@@ -127,6 +130,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.muteInGameBotMessages}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.muteInGameBotMessages)
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getBotMutedInGameButton(guildId,
@@ -143,6 +147,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.connectionNotify}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.connectionNotify)
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getInGameTeammateNotificationsButtons(guildId)]
@@ -158,6 +163,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.afkNotify}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.afkNotify);
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getInGameTeammateNotificationsButtons(guildId)]
@@ -173,6 +179,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.deathNotify}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.deathNotify);
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getInGameTeammateNotificationsButtons(guildId)]
@@ -189,6 +196,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.fcmAlarmNotificationEnabled}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.fcmAlarmNotificationEnabled);
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getFcmAlarmNotificationButtons(
@@ -208,6 +216,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.fcmAlarmNotificationEveryone}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.fcmAlarmNotificationEveryone);
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getFcmAlarmNotificationButtons(
@@ -227,6 +236,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.smartAlarmNotifyInGame}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.smartAlarmNotifyInGame);
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getSmartAlarmNotifyInGameButton(
@@ -246,6 +256,10 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.smartSwitchNotifyInGameWhenChangedFromDiscord}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(
+            interaction,
+            instance.generalSettings.smartSwitchNotifyInGameWhenChangedFromDiscord
+        );
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getSmartSwitchNotifyInGameWhenChangedFromDiscordButton(
@@ -263,6 +277,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.leaderCommandEnabled}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.leaderCommandEnabled);
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getLeaderCommandEnabledButton(
@@ -281,6 +296,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.leaderCommandOnlyForPaired}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.leaderCommandOnlyForPaired);
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getLeaderCommandOnlyForPairedButton(
@@ -299,6 +315,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.mapWipeNotifyEveryone}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.mapWipeNotifyEveryone);
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getMapWipeNotifyEveryoneButton(instance.generalSettings.mapWipeNotifyEveryone)]
@@ -316,6 +333,10 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.itemAvailableInVendingMachineNotifyInGame}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(
+            interaction,
+            instance.generalSettings.itemAvailableInVendingMachineNotifyInGame
+        );
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getItemAvailableNotifyInGameButton(guildId,
@@ -334,6 +355,10 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.displayInformationBattlemetricsAllOnlinePlayers}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(
+            interaction,
+            instance.generalSettings.displayInformationBattlemetricsAllOnlinePlayers
+        );
 
         await client.interactionUpdate(interaction, {
             components: [DiscordButtons.getDisplayInformationBattlemetricsAllOnlinePlayersButton(guildId,
@@ -370,6 +395,10 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.battlemetricsServerNameChanges}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(
+            interaction,
+            instance.generalSettings.battlemetricsServerNameChanges
+        );
 
         await client.interactionUpdate(interaction, {
             components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId)
@@ -387,6 +416,10 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.battlemetricsTrackerNameChanges}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(
+            interaction,
+            instance.generalSettings.battlemetricsTrackerNameChanges
+        );
 
         await client.interactionUpdate(interaction, {
             components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId)
@@ -404,6 +437,10 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.battlemetricsGlobalNameChanges}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(
+            interaction,
+            instance.generalSettings.battlemetricsGlobalNameChanges
+        );
 
         await client.interactionUpdate(interaction, {
             components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId)
@@ -418,9 +455,10 @@ module.exports = async (client, interaction) => {
             instance.generalSettings.battlemetricsGlobalLogin;
 
         client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'buttonValueChange', {
-            id: `${verifyId}`,
+            id: `${instance.generalSettings.battlemetricsGlobalLogin}`,
             value: `${instance.generalSettings.battlemetricsGlobalLogin}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.battlemetricsGlobalLogin);
 
         await client.interactionUpdate(interaction, {
             components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId)
@@ -438,6 +476,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${instance.generalSettings.battlemetricsGlobalLogout}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, instance.generalSettings.battlemetricsGlobalLogout);
 
         await client.interactionUpdate(interaction, {
             components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId)
@@ -474,6 +513,8 @@ module.exports = async (client, interaction) => {
         await DiscordMessages.sendServerMessage(guildId, ids.serverId, null, interaction);
 
         newRustplus.isNewConnection = true;
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('ServerEdit')) {
         const ids = JSON.parse(interaction.customId.replace('ServerEdit', ''));
@@ -531,6 +572,8 @@ module.exports = async (client, interaction) => {
         }
 
         client.setInstance(guildId, instance);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('CustomTimersEdit')) {
         const ids = JSON.parse(interaction.customId.replace('CustomTimersEdit', ''));
@@ -572,6 +615,8 @@ module.exports = async (client, interaction) => {
         }
         client.setInstance(guildId, instance);
 
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
+
         await DiscordMessages.sendTrackerMessage(guildId, trackerId);
     }
     else if (interaction.customId.startsWith('CreateGroup')) {
@@ -600,6 +645,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${groupId}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, groupId);
 
         await DiscordMessages.sendSmartSwitchGroupMessage(guildId, ids.serverId, groupId);
     }
@@ -625,6 +671,8 @@ module.exports = async (client, interaction) => {
         }
 
         await DiscordMessages.sendServerMessage(guildId, ids.serverId, null, interaction);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('ServerDelete')) {
         const ids = JSON.parse(interaction.customId.replace('ServerDelete', ''));
@@ -663,6 +711,8 @@ module.exports = async (client, interaction) => {
 
         delete instance.serverList[ids.serverId];
         client.setInstance(guildId, instance);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('SmartSwitchOn') ||
         interaction.customId.startsWith('SmartSwitchOff')) {
@@ -722,6 +772,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${active}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
 
         DiscordMessages.sendSmartSwitchMessage(guildId, ids.serverId, ids.entityId, interaction);
         SmartSwitchGroupHandler.updateSwitchGroupIfContainSwitch(client, guildId, ids.serverId, ids.entityId);
@@ -771,6 +822,8 @@ module.exports = async (client, interaction) => {
             }
         }
         client.setInstance(guildId, instance);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('SmartAlarmEveryone')) {
         const ids = JSON.parse(interaction.customId.replace('SmartAlarmEveryone', ''));
@@ -788,6 +841,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${server.alarms[ids.entityId].everyone}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, server.alarms[ids.entityId].everyone);
 
         await DiscordMessages.sendSmartAlarmMessage(guildId, ids.serverId, ids.entityId, interaction);
     }
@@ -810,6 +864,8 @@ module.exports = async (client, interaction) => {
 
         delete server.alarms[ids.entityId];
         client.setInstance(guildId, instance);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('SmartAlarmEdit')) {
         const ids = JSON.parse(interaction.customId.replace('SmartAlarmEdit', ''));
@@ -839,6 +895,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${server.storageMonitors[ids.entityId].everyone}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, server.storageMonitors[ids.entityId].everyone);
 
         await DiscordMessages.sendStorageMonitorMessage(guildId, ids.serverId, ids.entityId, interaction);
     }
@@ -858,6 +915,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${server.storageMonitors[ids.entityId].inGame}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, server.storageMonitors[ids.entityId].inGame);
 
         await DiscordMessages.sendStorageMonitorMessage(guildId, ids.serverId, ids.entityId, interaction);
     }
@@ -892,6 +950,8 @@ module.exports = async (client, interaction) => {
 
         delete server.storageMonitors[ids.entityId];
         client.setInstance(guildId, instance);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('StorageMonitorRecycle')) {
         const ids = JSON.parse(interaction.customId.replace('StorageMonitorRecycle', ''));
@@ -929,6 +989,8 @@ module.exports = async (client, interaction) => {
         setTimeout(async () => {
             await DiscordTools.deleteMessageById(guildId, instance.channelId.storageMonitors, message.id);
         }, 30000);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('StorageMonitorContainerDelete')) {
         const ids = JSON.parse(interaction.customId.replace('StorageMonitorContainerDelete', ''));
@@ -949,6 +1011,8 @@ module.exports = async (client, interaction) => {
 
         delete server.storageMonitors[ids.entityId];
         client.setInstance(guildId, instance);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId === 'RecycleDelete') {
         if (Config.discord.needAdminPrivileges && !client.isAdministrator(interaction)) {
@@ -957,6 +1021,8 @@ module.exports = async (client, interaction) => {
         }
 
         await interaction.message.delete();
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('GroupTurnOn') ||
         interaction.customId.startsWith('GroupTurnOff')) {
@@ -997,6 +1063,8 @@ module.exports = async (client, interaction) => {
 
                 await SmartSwitchGroupHandler.TurnOnOffGroup(
                     client, rustplus, guildId, ids.serverId, ids.groupId, active);
+
+                await DiscordMessages.sendButtonInteractionMessage(interaction);
             }
         }
     }
@@ -1038,6 +1106,8 @@ module.exports = async (client, interaction) => {
             delete server.switchGroups[ids.groupId];
             client.setInstance(guildId, instance);
         }
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('GroupAddSwitch')) {
         const ids = JSON.parse(interaction.customId.replace('GroupAddSwitch', ''));
@@ -1062,6 +1132,8 @@ module.exports = async (client, interaction) => {
 
         const modal = DiscordModals.getGroupRemoveSwitchModal(guildId, ids.serverId, ids.groupId);
         await interaction.showModal(modal);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('TrackerEveryone')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerEveryone', ''));
@@ -1079,6 +1151,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${tracker.everyone}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, tracker.everyone);
 
         await DiscordMessages.sendTrackerMessage(guildId, ids.trackerId, interaction);
     }
@@ -1094,6 +1167,8 @@ module.exports = async (client, interaction) => {
         // TODO! Remove name change icon from status
 
         await DiscordMessages.sendTrackerMessage(guildId, ids.trackerId, interaction);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction, tracker.everyone);
     }
     else if (interaction.customId.startsWith('TrackerEdit')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerEdit', ''));
@@ -1126,6 +1201,8 @@ module.exports = async (client, interaction) => {
 
         delete instance.trackers[ids.trackerId];
         client.setInstance(guildId, instance);
+
+        await DiscordMessages.sendButtonInteractionMessage(interaction);
     }
     else if (interaction.customId.startsWith('TrackerAddPlayer')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerAddPlayer', ''));
@@ -1168,6 +1245,7 @@ module.exports = async (client, interaction) => {
             id: `${verifyId}`,
             value: `${tracker.inGame}`
         }));
+        await DiscordMessages.sendButtonInteractionMessage(interaction, tracker.inGame);
 
         await DiscordMessages.sendTrackerMessage(guildId, ids.trackerId, interaction);
     }

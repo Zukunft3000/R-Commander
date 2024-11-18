@@ -105,6 +105,7 @@ module.exports = {
     COLOR_TRAVELING_VENDOR_LOCATED_AT: '#F4A3E2',
     COLOR_TRAVELING_VENDOR_LEFT_MAP: '#5A3E9A',
     COLOR_TRAVELING_VENDOR_MOVING: '#7FCE41',
+    COLOR_DISCORD_INTERACTION: '#7289DA',
 
     GET_STEAM_PROFILE_LINK: function (steamId) {
         return `[${steamId}](${this.STEAM_PROFILES_URL}${steamId})`;
@@ -112,5 +113,13 @@ module.exports = {
 
     GET_BATTLEMETRICS_PROFILE_LINK: function (playerId) {
         return `[${playerId}](${this.BATTLEMETRICS_PROFILE_URL}${playerId})`;
+    },
+
+    GET_DISCORD_CHANNEL_URL: function (guildId, channelId) {
+        return `https://discord.com/channels/${guildId}/${channelId}`
+    },
+
+    GET_DISCORD_MESSAGE_URL: function (guildId, channelId, messageId) {
+        return `${this.GET_DISCORD_CHANNEL_URL(guildId, channelId)}/${messageId}`
     }
 }
