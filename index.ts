@@ -17,16 +17,24 @@
     https://github.com/alexemanuelol/rustplusplus
 
 */
-
+process.env.TZ = 'Europe/Moscow'
+const localPackage = require('./package.json');
 const Discord = require('discord.js');
 const Fs = require('fs');
 const Path = require('path');
 const axios = require('axios');
 
+const fs = require('fs');
+const path = require('path');
+const Config = require('./config');
+
+const logFilePath = path.join(__dirname, 'logs', 'errors.log');
+const previousErrors = new Set();
+
 const DiscordBot = require('./src/structures/DiscordBot');
 
 createMissingDirectories();
-//checkForUpdates();
+checkForUpdates();
 
 const client = new DiscordBot({
     intents: [
@@ -59,25 +67,31 @@ function createMissingDirectories() {
         Fs.mkdirSync(Path.join(__dirname, 'maps'));
     }
 }
-/*
-function checkForUpdates() {
-    const remote = 'https://raw.githubusercontent.com/alexemanuelol/rustplusplus/main/package.json';
-    const local = require('./package.json');
 
-    axios.get(remote).then((response: { data: any; }) => {
-        const remote = response.data;
-
-        if (remote.version !== local.version) {
-            client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'updateInfo', {
-                current: local.version,
-                new: remote.version
-            }), 'warn');
-        }
-    }).catch((error: any) => {
-        console.log(error);
-    });
+interface PackageJson {
+    version: string;
 }
-*/
+
+function checkForUpdates(): void {
+    const remoteUrl = 'https://raw.githubusercontent.com/alexemanuelol/rustplusplus/main/package.json';
+    const local: PackageJson = localPackage;
+
+    axios.get(remoteUrl)
+        .then((response: { data: PackageJson }) => {
+            const remote: PackageJson = response.data;
+
+            if (remote.version !== local.version) {
+                client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'updateInfo', {
+                    current: local.version,
+                    new: remote.version
+                }), 'warn');
+            }
+        })
+        .catch((error: unknown) => {
+            console.log(error);
+        });
+}
+
 /*
 process.on('unhandledRejection', error => {
     client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'unhandledRejection', {
@@ -86,11 +100,45 @@ process.on('unhandledRejection', error => {
     console.log(error);
 });
 */
-process.on('unhandledRejection', (error: unknown) => {
-    // Приводим тип error к Error, чтобы получить доступ к свойству stack
+
+
+// Функция для отправки сообщений в вебхук Discord
+async function sendToDiscordWebhook(message: string): Promise<void> {
+    try {
+        await axios.post(Config.discord.webhookerror, {
+            content: message
+        });
+    } catch (error) {
+        console.error('Ошибка при отправке сообщения в Discord вебхук:', error);
+    }
+}
+
+// Функция для логирования ошибок в файл
+function logErrorToFile(error: Error, location: string): void {
+    const logMessage = `${new Date().toISOString()} - Error: ${error.message}, Location: ${location}\n`;
+    fs.appendFileSync(logFilePath, logMessage, 'utf8');
+}
+
+process.on('unhandledRejection', async (error: unknown) => {
     if (error instanceof Error) {
         const stack = error.stack ? error.stack.split('\n') : [];
         const location = stack[1] ? stack[1].trim() : 'Unknown location';
+
+        const errorMessage = `Unhandled Rejection at: ${location}\nError: ${error.message}`;
+
+        if (!previousErrors.has(errorMessage)) {
+            previousErrors.add(errorMessage);
+            if (previousErrors.size > 50) {
+                // Ограничиваем размер набора ошибок, чтобы избежать утечки памяти
+                previousErrors.clear();
+            }
+
+            // Логируем ошибку в файл
+            logErrorToFile(error, location);
+
+            // Отправляем ошибку в вебхук Discord
+            await sendToDiscordWebhook(errorMessage);
+        }
 
         client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'unhandledRejection', {
             error: error.message,
@@ -100,7 +148,21 @@ process.on('unhandledRejection', (error: unknown) => {
         console.log(`Unhandled Rejection at: ${location}`);
         console.log(error);
     } else {
-        // Если error не является экземпляром Error, просто логируем его
+        const errorMessage = `Unhandled Rejection: ${String(error)}`;
+        if (!previousErrors.has(errorMessage)) {
+            previousErrors.add(errorMessage);
+            if (previousErrors.size > 50) {
+                // Ограничиваем размер набора ошибок, чтобы избежать утечки памяти
+                previousErrors.clear();
+            }
+
+            // Логируем ошибку в файл
+            logErrorToFile(new Error(String(error)), 'Unknown location');
+
+            // Отправляем ошибку в вебхук Discord
+            await sendToDiscordWebhook(errorMessage);
+        }
+
         client.log(client.intlGet(null, 'errorCap'), `Unhandled Rejection: ${String(error)}`, 'error');
         console.log(`Unhandled Rejection: ${String(error)}`);
     }

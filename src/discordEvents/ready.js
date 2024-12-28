@@ -52,31 +52,44 @@ module.exports = {
         catch (e) {
             client.log(client.intlGet(null, 'warningCap'), client.intlGet(null, 'ignoreSetAvatar'));
         }
+// Устанавливаем начальное состояние
+updatePresence();
 
-        client.user.setPresence({
-            activities: [{ name: '/help', type: Discord.ActivityType.Listening }],
-            status: 'online'
-        });
+// Обновляем статус каждую минуту
+setInterval(updatePresence, 60000); // 60000 мс = 1 минута
+function updatePresence() {
+const uptime = process.uptime(); // Получаем время работы бота в секундах
+const uptimeMessage = `Uptime: ${Math.floor(uptime / 60)}m ${Math.floor(uptime % 60)}s`; // Форматируем сообщение
+let lastUpdated = new Date(); // Обновляем время последнего обновления
 
-        client.uptimeBot = new Date();
+const lastUpdatedMessage = `${lastUpdated.toLocaleTimeString()}`; // Форматируем сообщение о последнем обновлении
 
-        for (let guildArray of client.guilds.cache) {
-            const guild = guildArray[1];
+// Обновляем статус с описанием
+client.user.setPresence({
+        activities: [{ name: `/help ${uptimeMessage} | ${lastUpdatedMessage}`, type: Discord.ActivityType.Listening }],
+        status: 'online'
+    });
+}
 
-            try {
-                await guild.members.me.setNickname(Config.discord.username);
-            }
-            catch (e) {
-                client.log(client.intlGet(null, 'warningCap'), client.intlGet(null, 'ignoreSetNickname'));
-            }
-            await client.syncCredentialsWithUsers(guild);
-            await client.setupGuild(guild);
+    client.uptimeBot = new Date();
+
+    for (let guildArray of client.guilds.cache) {
+        const guild = guildArray[1];
+
+        try {
+            await guild.members.me.setNickname(Config.discord.username);
         }
+        catch (e) {
+            client.log(client.intlGet(null, 'warningCap'), client.intlGet(null, 'ignoreSetNickname'));
+        }
+        await client.syncCredentialsWithUsers(guild);
+        await client.setupGuild(guild);
+    }
 
-        await client.updateBattlemetricsInstances();
-        BattlemetricsHandler.handler(client, true);
-        client.battlemetricsIntervalId = setInterval(BattlemetricsHandler.handler, 60000, client, false);
+    await client.updateBattlemetricsInstances();
+    BattlemetricsHandler.handler(client, true);
+    client.battlemetricsIntervalId = setInterval(BattlemetricsHandler.handler, 60000, client, false);
 
-        client.createRustplusInstancesFromConfig();
-    },
+    client.createRustplusInstancesFromConfig();
+},
 };

@@ -20,12 +20,13 @@
 
 module.exports = {
     general: {
-        language: process.env.RPP_LANGUAGE || 'en',
+        language: process.env.RPP_LANGUAGE || 'ru',
         pollingIntervalMs: process.env.RPP_POLLING_INTERVAL || 10000,
         showCallStackError: process.env.RPP_LOG_CALL_STACK || false,
         reconnectIntervalMs: process.env.RPP_RECONNECT_INTERVAL || 15000,
     },
     discord: {
+        webhookerror: process.env.webhookerror || '',
         username: process.env.RPP_DISCORD_USERNAME || 'rustplusplus',
         categoryName: process.env.RPP_DISCORD_CATEGORY_NAME || 'rustplusplus',
         avatarUrl: process.env.RPP_DISCORD_AVATAR_URL || '',
