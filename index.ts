@@ -18,6 +18,8 @@
 
 */
 process.env.TZ = 'Europe/Moscow'
+const web = require('./web.js');
+
 const localPackage = require('./package.json');
 const Discord = require('discord.js');
 const Fs = require('fs');
