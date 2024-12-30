@@ -16,7 +16,7 @@ const DiscordBot = require('./src/structures/DiscordBot');
 const checkForUpdates = require('./checkForUpdates');
 
 createMissingDirectories();
-checkForUpdates();
+//checkForUpdates();
 
 const client = new DiscordBot({
     intents: [
