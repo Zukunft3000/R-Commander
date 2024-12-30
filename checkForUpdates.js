@@ -1,67 +1,28 @@
-process.env.TZ = 'Europe/Moscow';
-
-const Discord = require('discord.js');
-const Fs = require('fs');
-const Path = require('path');
 const axios = require('axios');
+const localPackage = require('./package.json');
+const client = require('./src/structures/DiscordBot');
 
-const fs = require('fs');
-const path = require('path');
-const Config = require('./config');
+function checkForUpdates() {
+    const remoteUrl = 'https://raw.githubusercontent.com/alexemanuelol/rustplusplus/main/package.json';
+    const local = localPackage;
 
-const logFilePath = path.join(__dirname, 'logs', 'errors.log');
-const previousErrors = new Set();
+    axios.get(remoteUrl)
+        .then((response) => {
+            const remote = response.data;
 
-const DiscordBot = require('./src/structures/DiscordBot');
-const checkForUpdates = require('./checkForUpdates');
-
-createMissingDirectories();
-checkForUpdates();
-
-const client = new DiscordBot({
-    intents: [
-        Discord.GatewayIntentBits.Guilds,
-        Discord.GatewayIntentBits.GuildMessages,
-        Discord.GatewayIntentBits.MessageContent,
-        Discord.GatewayIntentBits.GuildMembers,
-        Discord.GatewayIntentBits.GuildVoiceStates],
-    retryLimit: 2,
-    restRequestTimeout: 60000,
-    disableEveryone: false
-});
-
-client.build();
-
-function createMissingDirectories() {
-    if (!Fs.existsSync(Path.join(__dirname, 'logs'))) {
-        Fs.mkdirSync(Path.join(__dirname, 'logs'));
-    }
-
-    if (!Fs.existsSync(Path.join(__dirname, 'instances'))) {
-        Fs.mkdirSync(Path.join(__dirname, 'instances'));
-    }
-
-    if (!Fs.existsSync(Path.join(__dirname, 'credentials'))) {
-        Fs.mkdirSync(Path.join(__dirname, 'credentials'));
-    }
-
-    if (!Fs.existsSync(Path.join(__dirname, 'maps'))) {
-        Fs.mkdirSync(Path.join(__dirname, 'maps'));
-    }
+            if (remote.version !== local.version) {
+                client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'updateInfo', {
+                    current: local.version,
+                    new: remote.version
+                }), 'warn');
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 }
-
-/*
-process.on('unhandledRejection', error => {
-    client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'unhandledRejection', {
-        error: error
-    }), 'error');
-    console.log(error);
-});
-*/
-/*
-
 // Функция для отправки сообщений в вебхук Discord
-async function sendToDiscordWebhook(message: string): Promise<void> {
+async function sendToDiscordWebhook(message) {
     try {
         await axios.post(Config.discord.webhookerror, {
             content: message
@@ -72,12 +33,12 @@ async function sendToDiscordWebhook(message: string): Promise<void> {
 }
 
 // Функция для логирования ошибок в файл
-function logErrorToFile(error: Error, location: string): void {
+function logErrorToFile(error, location) {
     const logMessage = `${new Date().toISOString()} - Error: ${error.message}, Location: ${location}\n`;
     fs.appendFileSync(logFilePath, logMessage, 'utf8');
 }
 
-process.on('unhandledRejection', async (error: unknown) => {
+process.on('unhandledRejection', async (error) => {
     if (error instanceof Error) {
         const stack = error.stack ? error.stack.split('\n') : [];
         const location = stack[1] ? stack[1].trim() : 'Unknown location';
@@ -125,5 +86,5 @@ process.on('unhandledRejection', async (error: unknown) => {
         console.log(`Unhandled Rejection: ${String(error)}`);
     }
 });
-*/
-exports.client = client;
+
+module.exports = checkForUpdates;
