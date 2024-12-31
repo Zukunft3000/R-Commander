@@ -499,24 +499,24 @@ module.exports = {
                 module.exports.getButton({
                     style: Discord.ButtonStyle.Link,
                     label: 'DEVELOPER',
-                    url: 'https://github.com/alexemanuelol'
+                    url: 'https://github.com/MrFiNka'
                 }),
                 module.exports.getButton({
                     style: Discord.ButtonStyle.Link,
                     label: 'REPOSITORY',
-                    url: 'https://github.com/alexemanuelol/rustplusplus'
+                    url: 'https://github.com/MrFiNka/rustplusplus'
                 })
             ),
             new Discord.ActionRowBuilder().addComponents(
                 module.exports.getButton({
                     style: Discord.ButtonStyle.Link,
                     label: 'DOCUMENTATION',
-                    url: 'https://github.com/alexemanuelol/rustplusplus/blob/master/docs/documentation.md'
+                    url: 'https://github.com/MrFiNka/rustplusplus/blob/master/docs/documentation.md'
                 }),
                 module.exports.getButton({
                     style: Discord.ButtonStyle.Link,
                     label: 'CREDENTIALS',
-                    url: 'https://github.com/alexemanuelol/rustplusplus-Credential-Application/releases/v1.4.0'
+                    url: 'https://github.com/MrFiNka/rustplusplus-Credential-Application/releases/v1.4.0'
                 })
             )];
     },
