@@ -40,6 +40,7 @@ class Player {
         this._teamLeader = false;
         this._afkSeconds = 0;
         this._wentOfflineTime = null;
+        this._wentOnlineTime = this.isOnline ? new Date() : null;
 
         this.updatePos();
     }
@@ -73,6 +74,8 @@ class Player {
     set afkSeconds(afkSeconds) { this._afkSeconds = afkSeconds; }
     get wentOfflineTime() { return this._wentOfflineTime; }
     set wentOfflineTime(wentOfflineTime) { this._wentOfflineTime = wentOfflineTime; }
+    get wentOnlineTime() { return this._wentOnlineTime; }
+    set wentOnlineTime(wentOnlineTime) { this._wentOnlineTime = wentOnlineTime; }
 
     /* Change checkers */
     isSteamIdChanged(player) { return (this.steamId !== player.steamId.toString()); }
@@ -105,11 +108,13 @@ class Player {
     updatePlayer(player) {
         if (this.isGoneOffline(player)) {
             this.wentOfflineTime = new Date();
+            this.wentOnlineTime = null;
         }
 
         if (this.isGoneOnline(player)) {
             this.lastMovement = new Date();
             this.afkSeconds = 0;
+            this.wentOnlineTime = new Date();
         }
 
         if (this.isMoved(player)) {
@@ -160,9 +165,16 @@ class Player {
         return (new Date() - new Date(this.deathTime * 1000)) / 1000;
     }
     getDeathTime(ignore = '') { return (Time.secondsToFullScale(this.getDeathSeconds(), ignore)); }
+
     getOfflineTime(ignore = '') {
         if (this.wentOfflineTime === null) return null;
         const seconds = (new Date() - this.wentOfflineTime) / 1000;
+        return (Time.secondsToFullScale(seconds, ignore));
+    }
+
+    getOnlineTime(ignore = '') {
+        if (this.wentOnlineTime === null) return null;
+        const seconds = (new Date() - this.wentOnlineTime) / 1000;
         return (Time.secondsToFullScale(seconds, ignore));
     }
 
