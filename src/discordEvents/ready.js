@@ -55,11 +55,27 @@ module.exports = {
 // Устанавливаем начальное состояние
 updatePresence();
 
+function formatUptime(uptime) {
+    const days = Math.floor(uptime / 86400); // 86400 секунд в дне
+    const hours = Math.floor((uptime % 86400) / 3600); // 3600 секунд в часе
+    const minutes = Math.floor((uptime % 3600) / 60); // 60 секунд в минуте
+    const seconds = uptime % 60;
+
+    const parts = [];
+    if (days > 0) parts.push(`${days}d`);
+    if (hours > 0) parts.push(`${hours}h`);
+    if (minutes > 0) parts.push(`${minutes}m`);
+    if (seconds > 0) parts.push(`${seconds}s`);
+
+    return `Uptime: ${parts.join(' ') || '0s'}`; // Если все нули, показываем '0s'
+}
+
 // Обновляем статус каждую минуту
 setInterval(updatePresence, 60000); // 60000 мс = 1 минута
 function updatePresence() {
 const uptime = process.uptime(); // Получаем время работы бота в секундах
-const uptimeMessage = `Uptime: ${Math.floor(uptime / 60)}m ${Math.floor(uptime % 60)}s`; // Форматируем сообщение
+//const uptimeMessage = `Uptime: ${Math.floor(uptime / 60)}m ${Math.floor(uptime % 60)}s`; // Форматируем сообщение
+const uptimeMessage = formatUptime(uptime);
 let lastUpdated = new Date(); // Обновляем время последнего обновления
 
 const lastUpdatedMessage = `${lastUpdated.toLocaleTimeString()}`; // Форматируем сообщение о последнем обновлении
