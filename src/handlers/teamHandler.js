@@ -130,9 +130,11 @@ module.exports = {
         
                     if (player.isGoneOffline(playerUpdated)) {
                         const location = player.pos === null ? 'неизвестном месте' : player.pos.string;
+                        const onlineTime = player.getOnlineTime();
                         const str = client.intlGet(guildId, 'playerJustDisconnected', {
                             name: player.name,
-                            location: location // Вставка локации
+                            location: location, // Вставка локации
+                            time: onlineTime // Вставка времени в сети
                         });
                         await DiscordMessages.sendActivityNotificationMessage(
                             guildId, serverId, Constants.COLOR_INACTIVE, str, player.steamId);
@@ -148,6 +150,5 @@ module.exports = {
                 }
             }
         }
-              
     },
 }
