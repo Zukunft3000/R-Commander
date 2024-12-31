@@ -129,7 +129,11 @@ module.exports = {
                     }
         
                     if (player.isGoneOffline(playerUpdated)) {
-                        const str = client.intlGet(guildId, 'playerJustDisconnected', { name: player.name });
+                        const location = player.pos === null ? 'неизвестном месте' : player.pos.string;
+                        const str = client.intlGet(guildId, 'playerJustDisconnected', {
+                            name: player.name,
+                            location: location // Вставка локации
+                        });
                         await DiscordMessages.sendActivityNotificationMessage(
                             guildId, serverId, Constants.COLOR_INACTIVE, str, player.steamId);
                         if (instance.generalSettings.connectionNotify) await rustplus.sendInGameMessage(str);
@@ -143,6 +147,7 @@ module.exports = {
                     break;
                 }
             }
-        }        
+        }
+              
     },
 }
