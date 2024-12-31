@@ -466,6 +466,7 @@
     "lockedCrateLargeOilRigUnlocked": "Запертый ящик на большой нефтяной вышке ({location}) был разблокирован.",
     "lockedCrateLargeOilRigUnlockedSetting": "Когда запертый ящик на большой нефтяной вышке разблокируется, отправьте уведомление.",
     "lockedCrateOilRigUnlockedSetting": "Уведомление при открытии запертого ящика на Нефтяной вышке.",
+    "lockedCrateSmallOilRigUnlocked": "Запертый ящик на небольшой нефтяной вышке в {location} был разблокирован.",
     "lockedCrateSmallOilRigUnlockedSetting": "Когда запертый ящик на Малой нефтяной вышке разблокируется, отправьте уведомление.",
     "logDiscordCommand": "Discord  Command - Guild: {guild}, Канал: {channel}, Пользователь: {user}, Сообщение: {message}.",
     "logDiscordMessage": "Discord Message  - Guild: {guild}, Канал: {channel}, Пользователь: {user}, Сообщение: {message}.",
