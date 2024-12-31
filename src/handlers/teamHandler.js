@@ -67,7 +67,7 @@ module.exports = {
                 if (player.steamId === playerUpdated.steamId.toString()) {
                     if (player.isGoneDead(playerUpdated)) {
                         const location = player.pos === null ? 'spawn' : player.pos.string;
-                        const timeLived = player.getAliveTime('dhs'); // Получение времени жизни
+                        const timeLived = player.getAliveTime(); // Получение времени жизни
                         const str = client.intlGet(guildId, 'playerJustDied', {
                             name: player.name,
                             location: location,
@@ -86,7 +86,7 @@ module.exports = {
                     if (player.isGoneAfk(playerUpdated)) {
                         if (instance.generalSettings.afkNotify) {
                             const location = player.pos === null ? 'неизвестном месте' : player.pos.string;
-                            const afkTime = player.getAfkTime('dhs');
+                            const afkTime = player.getAfkTime();
                             const str = client.intlGet(guildId, 'playerJustWentAfk', {
                                 name: player.name,
                                 time: afkTime,
@@ -100,7 +100,7 @@ module.exports = {
                     if (player.isAfk() && player.isMoved(playerUpdated)) {
                         if (instance.generalSettings.afkNotify) {
                             const location = player.pos === null ? 'неизвестном месте' : player.pos.string;
-                            const afkTime = player.getAfkTime('dhs');
+                            const afkTime = player.getAfkTime();
                             const str = client.intlGet(guildId, 'playerJustReturned', {
                                 name: player.name,
                                 time: afkTime,
