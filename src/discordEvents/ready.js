@@ -59,7 +59,7 @@ function formatUptime(uptime) {
     const days = Math.floor(uptime / 86400); // 86400 секунд в дне
     const hours = Math.floor((uptime % 86400) / 3600); // 3600 секунд в часе
     const minutes = Math.floor((uptime % 3600) / 60); // 60 секунд в минуте
-    const seconds = uptime % 60;
+    const seconds = Math.floor(uptime % 60);
 
     const parts = [];
     if (days > 0) parts.push(`${days}d`);
