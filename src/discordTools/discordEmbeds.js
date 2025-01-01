@@ -844,8 +844,8 @@ module.exports = {
 
         if (player.isOnline) {
             const isAfk = player.getAfkSeconds() >= Constants.AFK_TIME_SECONDS;
-            const afkTime = player.getAfkTime('dhs');
-            const onlineTime = player.getOnlineTime('dhs');
+            const afkTime = player.getAfkTime('s');
+            const onlineTime = player.getOnlineTime('s');
 
             status += (isAfk) ? Constants.AFK_EMOJI : Constants.ONLINE_EMOJI;
             status += (player.isAlive) ? ((isAfk) ? Constants.SLEEPING_EMOJI : Constants.ALIVE_EMOJI) :
