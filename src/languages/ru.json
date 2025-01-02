@@ -382,6 +382,8 @@
     "entityId": "ID объекта",
     "equalsSign": "Равно",
     "errorCap": "ОШИБКА",
+    "commandsCalcDesc": "Описание команды калькулятора",
+    "commandsCalcExpressionDesc": "Введите математическое выражение для вычисления",
     "commandsCalcResult": "Результат вычисления выражения {expression} = {result}.",
     "commandsCalcError": "Произошла ошибка при вычислении выражения. Пожалуйста, проверьте корректность вашего ввода.",
     "errorExecutingCommand": "Во время выполнения этой команды произошла ошибка!",
