@@ -8,8 +8,12 @@ module.exports = {
 			.setName('restart')
 			.setDescription('Перезапустить бота');
 	},
+    async execute(client, interaction) {
+		await this.executeCommand(client, interaction)
 
-	async execute(client, interaction) {
+		DiscordMessages.sendApplicationCommandInteractionMessage(interaction)
+	},
+	async executeCommand(client, interaction) {
 		if (!await client.validatePermissions(interaction)) return;
 
 		await interaction.reply({ content: 'Перезапуск бота...', ephemeral: true });
