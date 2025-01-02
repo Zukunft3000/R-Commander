@@ -2747,6 +2747,31 @@ class RustPlus extends RustPlusLib {
 
         return strings;
     }
+    
+    getCommandCalcResult = function (command) {
+        const prefix = this.generalSettings.prefix;
+        const commandCalc = `${prefix}${Client.client.intlGet(this.guildId, 'commandSyntaxCalc')}`;
+        const commandCalcEn = `${prefix}${Client.client.intlGet('en', 'commandSyntaxCalc')}`;
+        if (command.toLowerCase().startsWith(`${commandCalc} `)) {
+            command = command.slice(`${commandCalc} `.length).trim();
+        } else {
+            command = command.slice(`${commandCalcEn} `.length).trim();
+        }
+    
+        // Проверка на наличие только допустимых символов (цифры, операторы, пробелы, точки, скобки)
+        const validExpression = /^[\d\s+\-*/().,]+$/.test(command);
+        if (!validExpression) {
+            return Client.client.intlGet(this.guildId, 'commandsCalcError');
+        }
+    
+        try {
+            // Выполнение только допустимых математических выражений
+            const result = Function('"use strict";return (' + command + ')')();
+            return `${command} = ${result}`;
+        } catch (error) {
+            return Client.client.intlGet(this.guildId, 'commandsCalcError');
+        }
+    }
 
     getCommandRaidCost(command) {
         const prefix = this.generalSettings.prefix;

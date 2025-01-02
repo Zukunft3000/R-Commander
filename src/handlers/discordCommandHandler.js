@@ -208,6 +208,10 @@ module.exports = {
             commandLowerCase === `${prefix}${client.intlGet(guildId, 'commandSyntaxRaid')}`) {
             response = rustplus.getCommandRaidCost(command);
         }
+        else if (commandLowerCase.startsWith(`${prefix}${client.intlGet('en', 'commandSyntaxCalc')}`) ||
+            commandLowerCase.startsWith(`${prefix}${client.intlGet(guildId, 'commandSyntaxCalc')}`)) {
+                response = rustplus.getCommandCalcResult(command);
+        }
         else {
             /* Smart Switches/ Group Switches are not currently supported through discord. */
             return false;

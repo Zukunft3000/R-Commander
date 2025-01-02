@@ -148,6 +148,7 @@
     "commandSyntaxPop": "население",
     "commandSyntaxProx": "prox",
     "commandSyntaxRaid": "raid",
+    "commandSyntaxCalc": "calc",
     "commandSyntaxRecycle": "Переработка",
     "commandSyntaxRemove": "remove",
     "commandSyntaxResearch": "Исследование",

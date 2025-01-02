@@ -149,6 +149,7 @@
     "commandSyntaxPop": "pop",
     "commandSyntaxProx": "prox",
     "commandSyntaxRaid": "raid",
+    "commandSyntaxCalc": "calc",
     "commandSyntaxRecycle": "recycle",
     "commandSyntaxRemove": "remove",
     "commandSyntaxResearch": "research",
