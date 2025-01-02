@@ -383,6 +383,7 @@
     "entityId": "Entity ID",
     "equalsSign": "Equals Sign",
     "errorCap": "ERROR",
+    "commandsCalcError": "An error occurred while evaluating the expression. Please check the correctness of your input.",
     "errorExecutingCommand": "There was an error while executing this command!",
     "eventCap": "EVENT",
     "eventInfo": "Event Information",
