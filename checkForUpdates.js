@@ -1,36 +1,105 @@
 const axios = require('axios');
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
 const localPackage = require('./package.json');
 const client = require('./src/structures/DiscordBot');
+
+const logFilePath = './logs/errors.log';
+const previousErrors = new Set();
+
+async function sendToDiscordWebhook(message) {
+    try {
+        await axios.post(Config.discord.webhookerror, {
+            content: message,
+        });
+    } catch (error) {
+        console.error('Ошибка при отправке сообщения в Discord вебхук:', error);
+    }
+}
+
+function getDiskInfo() {
+    try {
+        const rootPath = path.parse(process.cwd()).root;
+        const stats = fs.statSync(rootPath);
+
+        const totalSpace = stats.blksize * stats.blocks; // Общий объём диска
+        const freeSpace = stats.blksize * stats.bfree; // Свободное пространство
+
+        return `Используется: ${((totalSpace - freeSpace) / 1024 / 1024 / 1024).toFixed(2)} GB / ${(
+            totalSpace /
+            1024 /
+            1024 /
+            1024
+        ).toFixed(2)} GB`;
+    } catch (error) {
+        console.error('Ошибка при получении информации о диске:', error);
+        return 'Не удалось получить информацию о диске';
+    }
+}
+
+function getSystemInfo() {
+    const cpus = os.cpus();
+    const cpuLoad = cpus.map(cpu => cpu.times).reduce((acc, times) => {
+        acc.user += times.user;
+        acc.nice += times.nice;
+        acc.sys += times.sys;
+        acc.idle += times.idle;
+        return acc;
+    }, { user: 0, nice: 0, sys: 0, idle: 0 });
+
+    const totalCpuTime = cpuLoad.user + cpuLoad.nice + cpuLoad.sys + cpuLoad.idle;
+    const cpuUsage = ((cpuLoad.user + cpuLoad.sys) / totalCpuTime) * 100;
+
+    const memoryUsage = `${((os.totalmem() - os.freemem()) / 1024 / 1024).toFixed(2)} MB`;
+    const diskInfo = getDiskInfo();
+
+    return {
+        cpuUsage: cpuUsage.toFixed(2) + '%',
+        memoryUsage,
+        diskInfo,
+    };
+}
+
+async function onBotStartup() {
+    const systemInfo = getSystemInfo();
+    const startupMessage = `Бот успешно запущен!\n
+    Время запуска: ${new Date().toLocaleTimeString()}\n
+    CPU Load: ${systemInfo.cpuUsage}\n
+    Memory Usage: ${systemInfo.memoryUsage}\n
+    Disk Info: ${systemInfo.diskInfo}`;
+    console.log(startupMessage);
+
+    await sendToDiscordWebhook(startupMessage);
+}
 
 function checkForUpdates() {
     const remoteUrl = 'https://raw.githubusercontent.com/alexemanuelol/rustplusplus/main/package.json';
     const local = localPackage;
 
     axios.get(remoteUrl)
-        .then((response) => {
+        .then(async (response) => {
             const remote = response.data;
 
             if (remote.version !== local.version) {
+                const updateMessage = `Обнаружено обновление:\n
+                Текущая версия: ${local.version}\n
+                Новая версия: ${remote.version}`;
+                console.log(updateMessage);
+
                 client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'updateInfo', {
                     current: local.version,
-                    new: remote.version
+                    new: remote.version,
                 }), 'warn');
+
+                await sendToDiscordWebhook(updateMessage);
             }
         })
         .catch((error) => {
-            console.log(error);
+            console.error(error);
         });
 }
-// Функция для отправки сообщений в вебхук Discord
-async function sendToDiscordWebhook(message) {
-    try {
-        await axios.post(Config.discord.webhookerror, {
-            content: message
-        });
-    } catch (error) {
-        console.error('Ошибка при отправке сообщения в Discord вебхук:', error);
-    }
-}
+
 
 // Функция для логирования ошибок в файл
 function logErrorToFile(error, location) {
@@ -87,4 +156,4 @@ process.on('unhandledRejection', async (error) => {
     }
 });
 
-module.exports = checkForUpdates;
+module.exports = checkForUpdates,onBotStartup;

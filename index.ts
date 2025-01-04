@@ -14,9 +14,11 @@ const previousErrors = new Set();
 
 const DiscordBot = require('./src/structures/DiscordBot');
 const checkForUpdates = require('./checkForUpdates');
+const onBotStartup = require('./checkForUpdates');
 
 createMissingDirectories();
-//checkForUpdates();
+checkForUpdates();
+onBotStartup();
 
 const client = new DiscordBot({
     intents: [

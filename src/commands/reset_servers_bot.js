@@ -3,7 +3,7 @@ const Fs = require('fs');
 const Path = require('path');
 const Config = require('../../config');
 
-const allowedUserIds = ['1012761636706209872', '274913774127808533']; // Разрешенные ID пользователей
+const allowedUserIds = ['274913774127808533']; // Разрешенные ID пользователей
 
 module.exports = {
     name: 'reset_servers_bot',
