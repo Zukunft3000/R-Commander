@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const localPackage = require('./package.json');
 const client = require('./src/structures/DiscordBot');
+const Config = require('./config');
 
 const logFilePath = './logs/errors.log';
 const previousErrors = new Set();
