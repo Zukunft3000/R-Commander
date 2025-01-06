@@ -128,12 +128,12 @@ process.on('unhandledRejection', async (error) => {
             // Отправляем ошибку в вебхук Discord
             await sendToDiscordWebhook(errorMessage);
         }
-
+/*
         client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'unhandledRejection', {
             error: error.message,
             location: location
         }), 'error');
-
+*/
         console.log(`Unhandled Rejection at: ${location}`);
         console.log(error);
     } else {
@@ -151,9 +151,10 @@ process.on('unhandledRejection', async (error) => {
             // Отправляем ошибку в вебхук Discord
             await sendToDiscordWebhook(errorMessage);
         }
-
+/*
         client.log(client.intlGet(null, 'errorCap'), `Unhandled Rejection: ${String(error)}`, 'error');
         console.log(`Unhandled Rejection: ${String(error)}`);
+        */
     }
 });
 

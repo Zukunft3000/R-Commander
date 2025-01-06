@@ -709,7 +709,7 @@ module.exports = {
 
         if (battlemetricsId && instance.generalSettings.displayInformationBattlemetricsUpcomingWipes){
             const bmInstance = Client.client.battlemetricsInstances[battlemetricsId];
-            const upcomingWipes = bmInstance.getUpcomingWipesOrderedByTime();
+            const upcomingWipes = "Receiving Error" || bmInstance.getUpcomingWipesOrderedByTime();
 
             if (upcomingWipes.length > 0){
                 const closestWipe = upcomingWipes[0];
