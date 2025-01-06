@@ -13,12 +13,14 @@ const logFilePath = path.join(__dirname, 'logs', 'errors.log');
 const previousErrors = new Set();
 
 const DiscordBot = require('./src/structures/DiscordBot');
-const checkForUpdates = require('./checkForUpdates');
-const onBotStartup = require('./checkForUpdates');
+const { onBotStartup, checkForUpdates } = require('./checkForUpdates');
+(async () => {
+    await onBotStartup();
+    checkForUpdates();
+})();
 
 createMissingDirectories();
-checkForUpdates();
-onBotStartup();
+
 
 const client = new DiscordBot({
     intents: [
@@ -42,7 +44,7 @@ function createMissingDirectories() {
     if (!Fs.existsSync(Path.join(__dirname, 'instances'))) {
         Fs.mkdirSync(Path.join(__dirname, 'instances'));
     }
-
+/*  */
     if (!Fs.existsSync(Path.join(__dirname, 'credentials'))) {
         Fs.mkdirSync(Path.join(__dirname, 'credentials'));
     }

@@ -22,22 +22,17 @@ async function sendToDiscordWebhook(message) {
 function getDiskInfo() {
     try {
         const rootPath = path.parse(process.cwd()).root;
-        const stats = fs.statSync(rootPath);
 
-        const totalSpace = stats.blksize * stats.blocks; // Общий объём диска
-        const freeSpace = stats.blksize * stats.bfree; // Свободное пространство
+        const { size, free } = fs.statSync(rootPath);
+        const used = size - free;
 
-        return `Используется: ${((totalSpace - freeSpace) / 1024 / 1024 / 1024).toFixed(2)} GB / ${(
-            totalSpace /
-            1024 /
-            1024 /
-            1024
-        ).toFixed(2)} GB`;
+        return `Используется: ${(used / 1024 / 1024 / 1024).toFixed(2)} GB / ${(size / 1024 / 1024 / 1024).toFixed(2)} GB`;
     } catch (error) {
         console.error('Ошибка при получении информации о диске:', error);
         return 'Не удалось получить информацию о диске';
     }
 }
+
 
 function getSystemInfo() {
     const cpus = os.cpus();
@@ -63,18 +58,23 @@ function getSystemInfo() {
 }
 
 async function onBotStartup() {
-    const systemInfo = getSystemInfo();
-    const startupMessage = `Бот успешно запущен!\n
-    Время запуска: ${new Date().toLocaleTimeString()}\n
-    CPU Load: ${systemInfo.cpuUsage}\n
-    Memory Usage: ${systemInfo.memoryUsage}\n
-    Disk Info: ${systemInfo.diskInfo}`;
-    console.log(startupMessage);
+    try {
+        const systemInfo = getSystemInfo();
+        const startupMessage = `Бот успешно запущен!\n
+        Время запуска: ${new Date().toLocaleTimeString()}\n
+        CPU Load: ${systemInfo.cpuUsage}\n
+        Memory Usage: ${systemInfo.memoryUsage}\n
+        Disk Info: ${systemInfo.diskInfo}`;
+        console.log(startupMessage);
 
-    await sendToDiscordWebhook(startupMessage);
+        await sendToDiscordWebhook(startupMessage);
+    } catch (error) {
+        console.error('Ошибка при запуске бота:', error);
+    }
 }
 
-function checkForUpdates() {
+
+function checkForUpdates() {Ф
     const remoteUrl = 'https://raw.githubusercontent.com/alexemanuelol/rustplusplus/main/package.json';
     const local = localPackage;
 
@@ -158,4 +158,4 @@ process.on('unhandledRejection', async (error) => {
     }
 });
 
-module.exports = checkForUpdates,onBotStartup;
+module.exports = { checkForUpdates, onBotStartup };
