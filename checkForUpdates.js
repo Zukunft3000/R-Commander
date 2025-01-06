@@ -19,19 +19,25 @@ async function sendToDiscordWebhook(message) {
     }
 }
 
+const { execSync } = require('child_process');
+
 function getDiskInfo() {
     try {
-        const rootPath = path.parse(process.cwd()).root;
+        const output = execSync('df -h /').toString(); // Получаем данные о корневом разделе
+        const lines = output.trim().split('\n');
+        const diskInfo = lines[1].split(/\s+/); // Парсим вторую строку (информация о корне)
 
-        const { size, free } = fs.statSync(rootPath);
-        const used = size - free;
+        const totalSpace = diskInfo[1]; // Общий объём (например, 100G)
+        const usedSpace = diskInfo[2]; // Использованное пространство (например, 50G)
+        const freeSpace = diskInfo[3]; // Свободное пространство (например, 50G)
 
-        return `Используется: ${(used / 1024 / 1024 / 1024).toFixed(2)} GB / ${(size / 1024 / 1024 / 1024).toFixed(2)} GB`;
+        return `Используется: ${usedSpace} / ${totalSpace} (Свободно: ${freeSpace})`;
     } catch (error) {
         console.error('Ошибка при получении информации о диске:', error);
         return 'Не удалось получить информацию о диске';
     }
 }
+
 
 
 function getSystemInfo() {
@@ -74,7 +80,7 @@ async function onBotStartup() {
 }
 
 
-function checkForUpdates() {Ф
+function checkForUpdates() {
     const remoteUrl = 'https://raw.githubusercontent.com/alexemanuelol/rustplusplus/main/package.json';
     const local = localPackage;
 
