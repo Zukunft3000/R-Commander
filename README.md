@@ -8,6 +8,10 @@
 <a href="https://ko-fi.com/alexemanuelol"><img src="https://img.shields.io/badge/Donate%20a%20Coffee-alexemanuelol-yellow?style=flat&logo=buy-me-a-coffee" alt="donate on ko-fi"/></a>
 
 <p align="center">
+<a href="https://discord.gg/zgnZKKWqCm"><img src="https://img.shields.io/badge/Discord-Fork-%237289DA?style=flat&logo=discord" alt="discord"/></a>
+<a href="https://www.donationalerts.com/r/mrfinka"><img src="https://img.shields.io/badge/Donate%20in%20public%20bot-MrFiNka-yellow?style=flat&logo=donationalerts" alt="donationalerts"/></a>
+
+<p align="center">
 <a href="https://crowdin.com/project/rustplusplus"><img src="https://badges.crowdin.net/rustplusplus/localized.svg" alt="donate on ko-fi"/></a>
 </p>
 
@@ -42,7 +46,7 @@ A NodeJS Discord Bot that uses the [rustplus.js](https://github.com/liamcottle/r
 
 ## **Documentation**
 
-> Documentation can be found [here](https://github.com/alexemanuelol/rustplusplus/blob/master/docs/documentation.md). The documentation explains the features as well as `how to setup the bot`, so make sure to take a look at it 😉
+> Documentation can be found [here](https://github.com/MrFiNka/rustplusplus/blob/master/docs/documentation.md). The documentation explains the features as well as `how to setup the bot`, so make sure to take a look at it 😉
 
 ## **Credentials**
 
