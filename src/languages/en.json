@@ -594,6 +594,7 @@
     "playerNotPairedWithServer": "Leader command does not work because {name} is not paired with the server.",
     "players": "Players",
     "playersSearch": "Players Search",
+    "playerDeathLog": "{title} - {victimName} was killed by {killerName} using {weapon}.",
     "plusSign": "Plus Sign",
     "populationPlayers": "Population: ({current}/{max}) players.",
     "populationQueue": "{number} players in queue.",

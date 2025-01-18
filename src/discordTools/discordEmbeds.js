@@ -579,7 +579,25 @@ module.exports = {
             }
         });
     },
-
+    
+    getTokenExpiredEmbed: function (guildId, username) {
+        return module.exports.getEmbed({
+            color: Constants.COLOR_WARNING, // Цвет предупреждающего сообщения
+            timestamp: true,               // Добавление текущей даты и времени
+            footer: { text: 'Rust+ Token Expiration' },
+            author: {
+                name: Client.client.intlGet(guildId, 'rustTokenExpired', { name: username }),
+                iconURL: Constants.DEFAULT_SERVER_IMG, // Иконка по умолчанию
+                url: 'https://companion-rust.facepunch.com/login' // Ссылка для обновления токена
+            },
+            description: Client.client.intlGet(
+                guildId,
+                'tokenRenewalPrompt',
+                { url: '[Rust+ Companion](https://companion-rust.facepunch.com/login)' }
+            )
+        });
+    },
+    
     getPlayerDeathEmbed: function (data, body, png) {
         return module.exports.getEmbed({
             color: Constants.COLOR_INACTIVE,
@@ -1028,27 +1046,45 @@ module.exports = {
         let names = '';
         let steamIds = '';
         let hoster = '';
-
+        let statuses = ''; // Новый столбец для статусов токенов
+    
         for (const credential in credentials) {
             if (credential === 'hoster') continue;
-
+    
             const user = await DiscordTools.getUserById(guildId, credentials[credential].discord_user_id);
-            names += `${user.user.username}\n`;
+            const expireDate = parseInt(credentials[credential].expire_date, 10);
+            const timeLeft = expireDate - Math.floor(Date.now() / 1000);
+    
+            // Определение статуса токена
+            let statusEmoji = ':green_circle:';
+            let statusText = 'Active';
+            if (timeLeft <= 0) {
+                statusEmoji = ':red_circle:';
+                statusText = 'Expired';
+            }
+    
+            const daysLeft = Math.max(0, Math.floor(timeLeft / (24 * 60 * 60)));
+            statuses += `${statusEmoji} ${statusText}${timeLeft > 0 ? ` (Expires in: ${daysLeft} days)` : ''}\n`;
+    
+            names += `${user ? user.user.username : 'Unknown User'}\n`;
             steamIds += `${credential}\n`;
             hoster += `${credential === credentials.hoster ? `${Constants.LEADER_EMOJI}\n` : '\u200B\n'}`;
         }
-
+    
         if (names === '') names = Client.client.intlGet(guildId, 'empty');
         if (steamIds === '') steamIds = Client.client.intlGet(guildId, 'empty');
         if (hoster === '') hoster = Client.client.intlGet(guildId, 'empty');
-
+        if (statuses === '') statuses = Client.client.intlGet(guildId, 'empty');
+    
         return module.exports.getEmbed({
             color: Constants.COLOR_DEFAULT,
             title: Client.client.intlGet(guildId, 'fcmCredentials'),
             fields: [
                 { name: Client.client.intlGet(guildId, 'name'), value: names, inline: true },
                 { name: 'SteamID', value: steamIds, inline: true },
-                { name: Client.client.intlGet(guildId, 'hoster'), value: hoster, inline: true }]
+                { name: Client.client.intlGet(guildId, 'hoster'), value: hoster, inline: true },
+                { name: 'Status', value: statuses, inline: true } // Новый столбец для статуса токенов
+            ]
         });
     },
 

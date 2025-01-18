@@ -594,6 +594,7 @@
     "playerNotPairedWithServer": "Команда лидера не работает, потому что {name} не связано с сервером.",
     "players": "Игроки",
     "playersSearch": "Поиск игрока",
+    "playerDeathLog": "{title} - {victimName} был убит игроком {killerName} с использованием {weapon}.",
     "plusSign": "Плюс",
     "populationPlayers": "Население: ({current}/{max}) игроков.",
     "populationQueue": "{number} находятся в очереди.",

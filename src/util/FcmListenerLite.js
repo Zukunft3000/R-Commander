@@ -348,7 +348,6 @@ async function pairingEntityStorageMonitor(client, guild, title, message, body) 
 
 async function playerDeath(client, guild, title, message, body, discordUserId) {
     const user = await DiscordTools.getUserById(guild.id, discordUserId);
-    if (!user) return;
 
     let png = null;
     if (body.targetId !== '') png = await Scrape.scrapeSteamProfilePicture(client, body.targetId);
@@ -362,13 +361,57 @@ async function playerDeath(client, guild, title, message, body, discordUserId) {
         await client.messageSend(user, content);
     }
 
-    // Формирование сообщения для лога
-    const killerName = body.killerName || 'Неизвестный';
-    const victimName = body.victimName || 'Неизвестный';
-    const weapon = body.weapon || 'Неизвестное оружие';
+    // Формирование локализованного сообщения для лога
+    const killerName = body.killerName || client.intlGet(guild.id, 'unknownKiller'); // Локализация для "Неизвестный убийца"
+    const victimName = body.victimName || client.intlGet(guild.id, 'unknownVictim'); // Локализация для "Неизвестная жертва"
+    const weapon = body.weapon || client.intlGet(guild.id, 'unknownWeapon');         // Локализация для "Неизвестное оружие"
 
-    const logMessage = `${title} - ${victimName} был убит игроком ${killerName} с использованием ${weapon}.`;
+    const logMessage = client.intlGet(guild.id, 'playerDeathLog', {
+        title,
+        victimName,
+        killerName,
+        weapon,
+    });
 
-    // Логирование информации для всей команды
+    // Логирование информации
     client.log(client.intlGet(null, 'infoCap'), logMessage);
 }
+
+
+async function checkTokenExpiration(client) {
+    const guilds = client.guilds.cache; // Получение всех серверов
+    guilds.forEach(async (guild) => {
+        const credentials = InstanceUtils.readCredentialsFile(guild.id);
+        if (!credentials) return;
+
+        for (const steamId in credentials) {
+            if (steamId === 'hoster') continue;
+
+            const expireDate = parseInt(credentials[steamId].expire_date, 10);
+            const timeLeft = expireDate - Math.floor(Date.now() / 1000);
+            const discordUserId = credentials[steamId].discord_user_id;
+
+            if (timeLeft <= 0) {
+                // Токен истек
+                const user = await client.users.fetch(discordUserId).catch(() => null);
+                if (user) {
+                    const embed = DiscordEmbeds.getTokenExpiredEmbed(
+                        guild.id,
+                        user.username || 'Unknown User'
+                    );
+
+                    await user.send({ embeds: [embed] }).catch(() => {
+                        client.log(client.intlGet(null, 'errorCap'), `Failed to send message to user ${discordUserId}.`);
+                    });
+                }
+
+                client.log(client.intlGet(null, 'infoCap'), `Token has expired for SteamID ${steamId} in Guild ${guild.id}.`);
+            }
+        }
+    });
+}
+checkTokenExpiration(client);
+// Запуск проверки (каждые 24 часа)
+setInterval(() => {
+    checkTokenExpiration(client);
+}, 24 * 60 * 60 * 1000); // 24 часа

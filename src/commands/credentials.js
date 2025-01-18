@@ -137,33 +137,54 @@ async function addCredentials(client, interaction, verifyId) {
     }
 
     if (steamId in credentials) {
-        const str = client.intlGet(guildId, 'credentialsAlreadyRegistered', { steamId: steamId });
-        await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(1, str));
-        client.log(client.intlGet(null, 'warningCap'), str);
+        const existing = credentials[steamId];
+        const newIssuedDate = interaction.options.getString('issued_date');
+        const newExpireDate = interaction.options.getString('expire_date');
+
+        // Проверка на обновление токена
+        if (existing.issued_date !== newIssuedDate || existing.expire_date !== newExpireDate) {
+            existing.issued_date = newIssuedDate;
+            existing.expire_date = newExpireDate;
+            existing.gcm.android_id = interaction.options.getString('gcm_android_id');
+            existing.gcm.security_token = interaction.options.getString('gcm_security_token');
+
+            InstanceUtils.writeCredentialsFile(guildId, credentials);
+
+            const str = client.intlGet(guildId, 'credentialsAddedSuccessfully', { steamId: steamId });
+            await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(0, str));
+            client.log(client.intlGet(null, 'infoCap'), str);
+            return;
+        }
+
+        const str = client.intlGet(interaction.guildId, 'credentialsAddedSuccessfully', { steamId: steamId });
+        await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(0, str));
+        client.log(client.intlGet(null, 'infoCap'), str);
         return;
     }
 
-    credentials[steamId] = new Object();
-    credentials[steamId].gcm = new Object();
-    credentials[steamId].gcm.android_id = interaction.options.getString('gcm_android_id');
-    credentials[steamId].gcm.security_token = interaction.options.getString('gcm_security_token');
-    credentials[steamId].issued_date = interaction.options.getString('issued_date');
-    credentials[steamId].expire_date = interaction.options.getString('expire_date');
-    credentials[steamId].discord_user_id = interaction.member.user.id;
+    // Добавление нового токена
+    credentials[steamId] = {
+        gcm: {
+            android_id: interaction.options.getString('gcm_android_id'),
+            security_token: interaction.options.getString('gcm_security_token'),
+        },
+        issued_date: interaction.options.getString('issued_date'),
+        expire_date: interaction.options.getString('expire_date'),
+        discord_user_id: interaction.member.user.id,
+    };
 
     const prevHoster = credentials.hoster;
     if (isHoster) credentials.hoster = steamId;
 
     InstanceUtils.writeCredentialsFile(guildId, credentials);
 
-    /* Start Fcm Listener */
+    /* Запуск Fcm Listener */
     if (isHoster) {
         require('../util/FcmListener')(client, DiscordTools.getGuild(interaction.guildId));
         if (prevHoster !== null) {
             require('../util/FcmListenerLite')(client, DiscordTools.getGuild(interaction.guildId), prevHoster);
         }
-    }
-    else {
+    } else {
         require('../util/FcmListenerLite')(client, DiscordTools.getGuild(interaction.guildId), steamId);
 
         const rustplus = client.rustplusInstances[guildId];
@@ -187,6 +208,7 @@ async function addCredentials(client, interaction, verifyId) {
     await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(0, str));
     client.log(client.intlGet(null, 'infoCap'), str);
 }
+
 
 async function removeCredentials(client, interaction, verifyId) {
     const guildId = interaction.guildId;
