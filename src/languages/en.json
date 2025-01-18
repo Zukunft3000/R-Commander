@@ -755,6 +755,7 @@
     "timerRemoved": "Timer ID: {id} was removed.",
     "timerSet": "Timer set for {time}.",
     "tokensDidNotReplenish": "Tokens did not replenish in time.",
+    "tokenRenewalPrompt": "Your Rust+ token has expired. Please renew it by visiting {url}.",
     "toolCupboard": "Tool Cupboard",
     "total": "Total",
     "tracker": "Tracker",

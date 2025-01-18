@@ -753,6 +753,7 @@
     "timerRemoved": "Таймер ID: {id} был удален.",
     "timerSet": "Таймер установлен на {time}.",
     "tokensDidNotReplenish": "Tocens вовремя не пополнялся.",
+    "tokenRenewalPrompt": "Ваш токен Rust+ истек. Пожалуйста, обновите его, посетив {url}.",
     "toolCupboard": "Шкаф c инструментами",
     "total": "Всего",
     "tracker": "Трекер",

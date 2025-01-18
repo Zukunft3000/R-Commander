@@ -588,15 +588,18 @@ module.exports = {
             author: {
                 name: Client.client.intlGet(guildId, 'rustTokenExpired', { name: username }),
                 iconURL: Constants.DEFAULT_SERVER_IMG, // Иконка по умолчанию
-                url: 'https://companion-rust.facepunch.com/login' // Ссылка для обновления токена
+                url: 'https://rustplusplus-credentials.netlify.app/documents/getting-started/fcm-credentials' // Ссылка для инструкций
             },
             description: Client.client.intlGet(
                 guildId,
                 'tokenRenewalPrompt',
-                { url: '[Rust+ Companion](https://companion-rust.facepunch.com/login)' }
+                { 
+                    url: '[Rust+ Companion Instructions](https://rustplusplus-credentials.netlify.app/documents/getting-started/fcm-credentials)'
+                }
             )
         });
     },
+    
     
     getPlayerDeathEmbed: function (data, body, png) {
         return module.exports.getEmbed({
