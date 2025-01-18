@@ -355,8 +355,20 @@ async function playerDeath(client, guild, title, message, body, discordUserId) {
     if (png === null) png = isValidUrl(body.img) ? body.img : Constants.DEFAULT_SERVER_IMG;
 
     const content = {
-        embeds: [DiscordEmbeds.getPlayerDeathEmbed({ title: title }, body, png)]
+        embeds: [DiscordEmbeds.getPlayerDeathEmbed({ title: title }, body, png)],
+    };
+
+    if (user) {
+        await client.messageSend(user, content);
     }
 
-    await client.messageSend(user, content);
+    // Формирование сообщения для лога
+    const killerName = body.killerName || 'Неизвестный';
+    const victimName = body.victimName || 'Неизвестный';
+    const weapon = body.weapon || 'Неизвестное оружие';
+
+    const logMessage = `${title} - ${victimName} был убит игроком ${killerName} с использованием ${weapon}.`;
+
+    // Логирование информации для всей команды
+    client.log(client.intlGet(null, 'infoCap'), logMessage);
 }
