@@ -78,6 +78,7 @@ module.exports = {
 
     /* Colors */
     COLOR_ACTIVE: '#00FF40',
+    COLOR_WARNING: '#FFA500', // Предупреждающий цвет (оранжевый)
     COLOR_CARGO_SHIP_ENTERS_EGRESS_STAGE: '#4B0082',
     COLOR_CARGO_SHIP_ENTERS_MAP: '#9932CC',
     COLOR_CARGO_SHIP_DOCKED: '#4444C7',
