@@ -754,6 +754,7 @@
     "timerSet": "Таймер установлен на {time}.",
     "tokensDidNotReplenish": "Tocens вовремя не пополнялся.",
     "tokenRenewalPrompt": "Ваш токен Rust+ истек. Пожалуйста, обновите его, посетив {url}.",
+    "rustTokenExpired": "Срок действия токена Rust+ для {name} истек.",
     "toolCupboard": "Шкаф c инструментами",
     "total": "Всего",
     "tracker": "Трекер",
