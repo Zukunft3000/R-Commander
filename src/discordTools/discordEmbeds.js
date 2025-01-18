@@ -1044,7 +1044,7 @@ module.exports = {
         });
     },
 
-    ggetCredentialsShowEmbed: async function (guildId) {
+    getCredentialsShowEmbed: async function (guildId) {
         const credentials = InstanceUtils.readCredentialsFile(guildId);
         let names = '';
         let steamIds = '';
