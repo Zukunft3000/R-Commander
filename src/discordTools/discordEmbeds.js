@@ -1044,34 +1044,30 @@ module.exports = {
         });
     },
 
-    getCredentialsShowEmbed: async function (guildId) {
+    ggetCredentialsShowEmbed: async function (guildId) {
         const credentials = InstanceUtils.readCredentialsFile(guildId);
         let names = '';
         let steamIds = '';
         let hoster = '';
-        let statuses = ''; // Новый столбец для статусов токенов
+        let statuses = '';
     
         for (const credential in credentials) {
             if (credential === 'hoster') continue;
     
             const user = await DiscordTools.getUserById(guildId, credentials[credential].discord_user_id);
+            const now = Math.floor(Date.now() / 1000); // Текущее время в секундах
             const expireDate = parseInt(credentials[credential].expire_date, 10);
-            const timeLeft = expireDate - Math.floor(Date.now() / 1000);
     
-            // Определение статуса токена
-            let statusEmoji = ':green_circle:';
-            let statusText = 'Active';
-            if (timeLeft <= 0) {
-                statusEmoji = ':red_circle:';
-                statusText = 'Expired';
-            }
+            const isActive = expireDate > now;
+            const daysLeft = Math.ceil((expireDate - now) / (60 * 60 * 24));
     
-            const daysLeft = Math.max(0, Math.floor(timeLeft / (24 * 60 * 60)));
-            statuses += `${statusEmoji} ${statusText}${timeLeft > 0 ? ` (Expires in: ${daysLeft} days)` : ''}\n`;
-    
-            names += `${user ? user.user.username : 'Unknown User'}\n`;
+            names += `${user.user.username}\n`;
             steamIds += `${credential}\n`;
             hoster += `${credential === credentials.hoster ? `${Constants.LEADER_EMOJI}\n` : '\u200B\n'}`;
+    
+            statuses += isActive
+                ? `:green_circle: Active (Expires in: ${daysLeft} days)\n`
+                : `:red_circle: Expired\n`;
         }
     
         if (names === '') names = Client.client.intlGet(guildId, 'empty');
@@ -1086,7 +1082,7 @@ module.exports = {
                 { name: Client.client.intlGet(guildId, 'name'), value: names, inline: true },
                 { name: 'SteamID', value: steamIds, inline: true },
                 { name: Client.client.intlGet(guildId, 'hoster'), value: hoster, inline: true },
-                { name: 'Status', value: statuses, inline: true } // Новый столбец для статуса токенов
+                { name: 'Status', value: statuses, inline: true } // Добавляем статус как отдельный столбец
             ]
         });
     },
