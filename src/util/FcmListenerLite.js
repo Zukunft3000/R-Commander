@@ -152,6 +152,11 @@ module.exports = async (client, guild, steamId) => {
     });
 
     client.fcmListenersLite[guild.id][steamId].connect();
+    checkTokenExpiration(client);
+// Запуск проверки (каждые 24 часа)
+setInterval(() => {
+    checkTokenExpiration(client);
+}, 24 * 60 * 60 * 1000); // 24 часа
 };
 
 function isValidUrl(url) {
@@ -410,8 +415,3 @@ async function checkTokenExpiration(client) {
         }
     });
 }
-checkTokenExpiration(client);
-// Запуск проверки (каждые 24 часа)
-setInterval(() => {
-    checkTokenExpiration(client);
-}, 24 * 60 * 60 * 1000); // 24 часа
