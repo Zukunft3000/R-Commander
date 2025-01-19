@@ -209,10 +209,10 @@ module.exports = async (client, guild) => {
     });
 
     client.fcmListeners[guild.id].connect();
-    //checkTokenExpiration(client);
+    checkTokenExpiration(client);
 // Запуск проверки (каждые 24 часа)
 setInterval(() => {
-    //checkTokenExpiration(client);
+    checkTokenExpiration(client);
 }, 24 * 60 * 60 * 1000); // 24 часа
 };
 
@@ -577,8 +577,9 @@ async function checkTokenExpiration(client) {
             const timeLeft = expireDate - Math.floor(Date.now() / 1000);
             const discordUserId = credentials[steamId].discord_user_id;
 
-            if (timeLeft <= 0) {
-                // Токен истек
+            // Проверяем, истёк ли токен, и не было ли уже отправлено уведомление
+            if (timeLeft <= 0 && !credentials[steamId].notification_sent) {
+                // Получаем информацию о пользователе Discord
                 const user = await client.users.fetch(discordUserId).catch(() => null);
                 if (user) {
                     const embed = DiscordEmbeds.getTokenExpiredEmbed(
@@ -586,15 +587,27 @@ async function checkTokenExpiration(client) {
                         user.username || 'Unknown User'
                     );
 
-                    await user.send({ embeds: [embed] }).catch(() => {
+                    // Отправляем сообщение пользователю
+                    await user.send({
+                        embeds: [embed],
+                        content: `Ваш токен для сервера **${guild.name}** истёк. Пожалуйста, обновите конфигурацию: [Rust+ Companion](https://rustplusplus-credentials.netlify.app/)`
+                    }).catch(() => {
                         client.log(client.intlGet(null, 'errorCap'), `Failed to send message to user ${discordUserId}.`);
                     });
+
+                    // Обновляем флаг `notification_sent` в credentials
+                    credentials[steamId].notification_sent = true;
+                    InstanceUtils.writeCredentialsFile(guild.id, credentials);
                 }
 
-                client.log(client.intlGet(null, 'infoCap'), `Token has expired for SteamID ${steamId} in Guild ${guild.id}.`);
+                client.log(
+                    client.intlGet(null, 'infoCap'),
+                    `Token has expired for SteamID ${steamId} in Guild ${guild.id}. Notification sent to user ${discordUserId}.`
+                );
             }
         }
     });
 }
+
 
 
