@@ -407,9 +407,11 @@ async function checkTokenExpiration(client) {
                     );
 
                     // Отправляем сообщение пользователю
-                    await user.send({
-                        embeds: [embed],
-                        content: `Ваш токен для сервера **${guild.name}** истёк. Пожалуйста, обновите конфигурацию: [Rust+ Companion](https://rustplusplus-credentials.netlify.app/)`
+                    await user.send({ embeds: [embed] }).catch(() => {
+                        client.log(
+                            client.intlGet(null, 'errorCap'),
+                            `Failed to send message to user ${discordUserId}.`
+                        );
                     }).catch(() => {
                         client.log(client.intlGet(null, 'errorCap'), `Failed to send message to user ${discordUserId}.`);
                     });

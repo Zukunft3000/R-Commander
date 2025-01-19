@@ -583,21 +583,23 @@ module.exports = {
     getTokenExpiredEmbed: function (guildId, username) {
         return module.exports.getEmbed({
             color: Constants.COLOR_WARNING, // Цвет предупреждающего сообщения
-            timestamp: true,               // Добавление текущей даты и времени
-            footer: { text: 'Rust+ Token Expiration' },
-            author: {
-                name: Client.client.intlGet(guildId, 'rustTokenExpired', { name: username }),
-                iconURL: Constants.DEFAULT_SERVER_IMG, // Иконка по умолчанию
-                url: 'https://rustplusplus-credentials.netlify.app/documents/getting-started/fcm-credentials' // Ссылка для инструкций
-            },
-            description: Client.client.intlGet(
-                guildId,
-                'tokenRenewalPrompt',
-                { 
-                    url: '[Rust+ Companion Instructions](https://rustplusplus-credentials.netlify.app/documents/getting-started/fcm-credentials)'
-                }
-            )
-        });
+                        timestamp: true,               // Добавление текущей даты и времени
+                        footer: { text: 'Rust+ Token Expiration' },
+                        author: {
+                            name: Client.client.intlGet(
+                                guild.id, 
+                                'rustTokenExpired', 
+                                { name: user.username || 'Unknown User' }
+                            ),
+                            iconURL: Constants.DEFAULT_SERVER_IMG, // Иконка по умолчанию
+                            url: 'https://rustplusplus-credentials.netlify.app/documents/getting-started/fcm-credentials' // Ссылка для инструкций
+                        },
+                        description: `${Client.client.intlGet(
+                            guild.id, 
+                            'tokenRenewalPrompt', 
+                            { url: '[Rust+ Companion Instructions](https://rustplusplus-credentials.netlify.app/documents/getting-started/fcm-credentials)' }
+                        )}\n\n**Сервер Discord:** ${guild.name}`
+                    });
     },
     
     
