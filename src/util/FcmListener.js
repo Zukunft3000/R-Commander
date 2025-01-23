@@ -190,10 +190,10 @@ module.exports = async (client, guild) => {
 
             case 'news': {
                 switch (body.type) {
-                    case 'news': {
-                        client.log('FCM Host', `GuildID: ${guild.id}, SteamID: ${hoster}, news: news`);
-                        newsNews(client, guild, full, data, body);
-                    } break;
+                   // case 'news': {
+                   //     client.log('FCM Host', `GuildID: ${guild.id}, SteamID: ${hoster}, news: news`);
+                   //     newsNews(client, guild, full, data, body);
+                   // } break;
 
                     default: {
                         client.log('FCM Host',
@@ -552,7 +552,7 @@ async function teamLogin(client, guild, title, message, body) {
             }));
     }
 }
-
+/*
 async function newsNews(client, guild, full, data, body) {
     const instance = client.getInstance(guild.id);
 
@@ -563,7 +563,7 @@ async function newsNews(client, guild, full, data, body) {
 
     await DiscordMessages.sendMessage(guild.id, content, null, instance.channelId.activity);
 }
-
+*/
 async function checkTokenExpiration(client) {
     const guilds = client.guilds.cache; // Получение всех серверов
     guilds.forEach(async (guild) => {
