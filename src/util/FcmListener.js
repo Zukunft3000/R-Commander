@@ -187,13 +187,13 @@ module.exports = async (client, guild) => {
                     } break;
                 }
             } break;
-
+/*
             case 'news': {
                 switch (body.type) {
-                   // case 'news': {
-                   //     client.log('FCM Host', `GuildID: ${guild.id}, SteamID: ${hoster}, news: news`);
-                   //     newsNews(client, guild, full, data, body);
-                   // } break;
+                    case 'news': {
+                        client.log('FCM Host', `GuildID: ${guild.id}, SteamID: ${hoster}, news: news`);
+                        newsNews(client, guild, full, data, body);
+                    } break;
 
                     default: {
                         client.log('FCM Host',
@@ -201,7 +201,7 @@ module.exports = async (client, guild) => {
                     } break;
                 }
             } break;
-
+*/
             default: {
                 client.log('FCM Host', `GuildID: ${guild.id}, SteamID: ${hoster}, other\n${JSON.stringify(data)}`);
             } break;
