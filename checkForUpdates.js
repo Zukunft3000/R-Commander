@@ -22,24 +22,6 @@ async function sendToDiscordWebhook(message) {
 
 const { execSync } = require('child_process');
 
-function getDiskInfo() {
-    try {
-        const output = execSync('df -h /').toString(); // Получаем данные о корневом разделе
-        const lines = output.trim().split('\n');
-        const diskInfo = lines[1].split(/\s+/); // Парсим вторую строку (информация о корне)
-
-        const totalSpace = diskInfo[1]; // Общий объём (например, 100G)
-        const usedSpace = diskInfo[2]; // Использованное пространство (например, 50G)
-        const freeSpace = diskInfo[3]; // Свободное пространство (например, 50G)
-
-        return `Используется: ${usedSpace} / ${totalSpace} (Свободно: ${freeSpace})`;
-    } catch (error) {
-        console.error('Ошибка при получении информации о диске:', error);
-        return 'Не удалось получить информацию о диске';
-    }
-}
-
-
 
 function getSystemInfo() {
     const cpus = os.cpus();
@@ -55,25 +37,21 @@ function getSystemInfo() {
     const cpuUsage = ((cpuLoad.user + cpuLoad.sys) / totalCpuTime) * 100;
 
     const memoryUsage = `${((os.totalmem() - os.freemem()) / 1024 / 1024).toFixed(2)} MB`;
-    const diskInfo = getDiskInfo();
+
 
     return {
         cpuUsage: cpuUsage.toFixed(2) + '%',
         memoryUsage,
-        diskInfo,
     };
 }
 
 async function onBotStartup() {
     try {
         const systemInfo = getSystemInfo();
-        const lastCommitHash = await getLastCommitFromGit();
         const startupMessage = `Бот успешно запущен!\n
         Время запуска: ${new Date().toLocaleTimeString()}\n
         CPU Load: ${systemInfo.cpuUsage}\n
-        Memory Usage: ${systemInfo.memoryUsage}\n
-        Disk Info: ${systemInfo.diskInfo}\n
-        Последний коммит: ${lastCommitHash}`;
+        Memory Usage: ${systemInfo.memoryUsage}`;
         console.log(startupMessage);
 
         await sendToDiscordWebhook(startupMessage);
@@ -82,21 +60,6 @@ async function onBotStartup() {
     }
 }
 
-function getLastCommitFromGit() {
-    return new Promise((resolve, reject) => {
-        const branchName = 'main'; // Укажите вашу ветку
-        const commitFilePath = path.join('.git', 'refs', 'heads', branchName);
-
-        fs.readFile(commitFilePath, 'utf8', (err, data) => {
-            if (err) {
-                reject(`Ошибка при чтении файла: ${err}`);
-                return;
-            }
-            const commitHash = data.trim();
-            resolve(commitHash);
-        });
-    });
-}
 
 
 function checkForUpdates() {
