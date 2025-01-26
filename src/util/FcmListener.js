@@ -273,9 +273,10 @@ async function pairingServer(client, guild, title, message, body) {
         steamId: body.playerId,
         playerToken: body.playerToken,
     };
-    client.setInstance(guild.id, instance);
+    //client.setInstance(guild.id, instance);
 
     await DiscordMessages.sendServerMessage(guild.id, serverId, null);
+    client.setInstance(guild.id, instance);
 }
 
 async function pairingEntitySwitch(client, guild, title, message, body) {
