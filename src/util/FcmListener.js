@@ -238,7 +238,7 @@ async function pairingServer(client, guild, title, message, body) {
             client.battlemetricsInstances[bmInstance.id] = bmInstance;
         }
     }
-
+    instance.activeServer = serverId,
     instance.serverList[serverId] = {
         title: title,
         serverIp: body.ip,

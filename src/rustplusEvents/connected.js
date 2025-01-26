@@ -45,7 +45,7 @@ module.exports = {
             rustplus.log(client.intlGet(null, 'errorCap'),
                 client.intlGet(null, 'somethingWrongWithConnection'), 'error');
 
-            instance.activeServer = serverId;
+            instance.activeServer = null;
             client.setInstance(guildId, instance);
 
             await DiscordMessages.sendServerConnectionInvalidMessage(guildId, serverId);
