@@ -6,6 +6,7 @@ const localPackage = require('./package.json');
 const client = require('./src/structures/DiscordBot');
 const Config = require('./config');
 
+
 const logFilePath = './logs/errors.log';
 const previousErrors = new Set();
 
@@ -66,17 +67,31 @@ function getSystemInfo() {
 async function onBotStartup() {
     try {
         const systemInfo = getSystemInfo();
+        const lastCommit = await getLastCommit();
         const startupMessage = `Бот успешно запущен!\n
         Время запуска: ${new Date().toLocaleTimeString()}\n
         CPU Load: ${systemInfo.cpuUsage}\n
         Memory Usage: ${systemInfo.memoryUsage}\n
-        Disk Info: ${systemInfo.diskInfo}`;
+        Disk Info: ${systemInfo.diskInfo}\n
+        Последний коммит: ${lastCommit}`;
         console.log(startupMessage);
 
         await sendToDiscordWebhook(startupMessage);
     } catch (error) {
         console.error('Ошибка при запуске бота:', error);
     }
+}
+
+function getLastCommit() {
+    return new Promise((resolve, reject) => {
+        execSync('git log -1 --pretty=format:"%h - %an, %ar : %s"', (error, stdout, stderr) => {
+            if (error) {
+                reject(`Ошибка: ${stderr}`);
+                return;
+            }
+            resolve(stdout);
+        });
+    });
 }
 
 
