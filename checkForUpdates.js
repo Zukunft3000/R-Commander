@@ -67,13 +67,13 @@ function getSystemInfo() {
 async function onBotStartup() {
     try {
         const systemInfo = getSystemInfo();
-        const lastCommit = await getLastCommit();
+        const lastCommitHash = await getLastCommitFromGit();
         const startupMessage = `Бот успешно запущен!\n
         Время запуска: ${new Date().toLocaleTimeString()}\n
         CPU Load: ${systemInfo.cpuUsage}\n
         Memory Usage: ${systemInfo.memoryUsage}\n
         Disk Info: ${systemInfo.diskInfo}\n
-        Последний коммит: ${lastCommit}`;
+        Последний коммит: ${lastCommitHash}`;
         console.log(startupMessage);
 
         await sendToDiscordWebhook(startupMessage);
@@ -82,14 +82,18 @@ async function onBotStartup() {
     }
 }
 
-function getLastCommit() {
+function getLastCommitFromGit() {
     return new Promise((resolve, reject) => {
-        execSync('git log -1 --pretty=format:"%h - %an, %ar : %s"', (error, stdout, stderr) => {
-            if (error) {
-                reject(`Ошибка: ${stderr}`);
+        const branchName = 'main'; // Укажите вашу ветку
+        const commitFilePath = path.join('.git', 'refs', 'heads', branchName);
+
+        fs.readFile(commitFilePath, 'utf8', (err, data) => {
+            if (err) {
+                reject(`Ошибка при чтении файла: ${err}`);
                 return;
             }
-            resolve(stdout);
+            const commitHash = data.trim();
+            resolve(commitHash);
         });
     });
 }

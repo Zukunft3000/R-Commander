@@ -238,7 +238,7 @@ async function pairingServer(client, guild, title, message, body) {
             client.battlemetricsInstances[bmInstance.id] = bmInstance;
         }
     }
-    instance.activeServer = serverId,
+
     instance.serverList[serverId] = {
         title: title,
         serverIp: body.ip,
@@ -273,10 +273,42 @@ async function pairingServer(client, guild, title, message, body) {
         steamId: body.playerId,
         playerToken: body.playerToken,
     };
-    //client.setInstance(guild.id, instance);
-
-    await DiscordMessages.sendServerMessage(guild.id, serverId, null);
     client.setInstance(guild.id, instance);
+//Connect server
+    await DiscordMessages.sendServerMessage(guild.id, serverId, null);
+    
+            const server = instance.serverList[serverId];
+    
+            if (!server) {
+                await interaction.message.delete();
+                return;
+            }
+    
+            client.resetRustplusVariables(guild.id);
+    
+            if (instance.activeServer !== null) {
+                await DiscordMessages.sendServerMessage(guild.id, instance.activeServer, null);
+            }
+    
+            instance.activeServer = serverId;
+            client.setInstance(guild.id, instance);
+    
+            /* Disconnect previous instance is any */
+            if (rustplus) {
+                rustplus.isDeleted = true;
+                rustplus.disconnect();
+            }
+    
+            /* Create the rustplus instance */
+            const newRustplus = client.createRustplusInstance(
+                guild.id, server.serverIp, server.appPort, server.steamId, server.playerToken);
+    
+            await DiscordMessages.sendServerMessage(guild.id, serverId, null, interaction);
+    
+            newRustplus.isNewConnection = true;
+    
+            await DiscordMessages.sendButtonInteractionMessage(interaction);
+   // client.setInstance(guild.id, instance);
 }
 
 async function pairingEntitySwitch(client, guild, title, message, body) {
