@@ -106,13 +106,13 @@ class DiscordBot extends Discord.Client {
     }
 
     loadEnIntl() {
-        const language = 'en';
+        const language = 'ru';
         const path = Path.join(__dirname, '..', 'languages', `${language}.json`);
         const messages = JSON.parse(Fs.readFileSync(path, 'utf8'));
         const cache = FormatJS.createIntlCache();
         this.enIntl = FormatJS.createIntl({
             locale: language,
-            defaultLocale: 'en',
+            defaultLocale: 'ru',
             messages: messages
         }, cache);
     }
@@ -124,7 +124,7 @@ class DiscordBot extends Discord.Client {
         const cache = FormatJS.createIntlCache();
         this.botIntl = FormatJS.createIntl({
             locale: language,
-            defaultLocale: 'en',
+            defaultLocale: 'ru',
             messages: messages
         }, cache);
     }
@@ -137,7 +137,7 @@ class DiscordBot extends Discord.Client {
         const cache = FormatJS.createIntlCache();
         this.guildIntl[guildId] = FormatJS.createIntl({
             locale: language,
-            defaultLocale: 'en',
+            defaultLocale: 'ru',
             messages: messages
         }, cache);
     }
@@ -150,11 +150,11 @@ class DiscordBot extends Discord.Client {
 
     intlGet(guildId, id, variables = {}) {
         let intl = null;
-        if (guildId && guildId !== 'en') {
+        if (guildId && guildId !== 'ru') {
             intl = this.guildIntl[guildId];
         }
         else {
-            if (guildId === 'en') {
+            if (guildId === 'ru') {
                 intl = this.enIntl;
             }
             else {
@@ -239,6 +239,7 @@ class DiscordBot extends Discord.Client {
         if (firstTime) await PermissionHandler.resetPermissionsAllChannels(this, guild);
 
         this.resetRustplusVariables(guild.id);
+        await guildJoinHandler(this, guild);
     }
 
     async syncCredentialsWithUsers(guild) {
