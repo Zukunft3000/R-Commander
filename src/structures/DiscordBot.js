@@ -48,7 +48,7 @@ class DiscordBot extends Discord.Client {
         this.guildIntl = {};
         this.botIntl = null;
         this.enIntl = null;
-        this.enMessages = JSON.parse(Fs.readFileSync(Path.join(__dirname, '..', 'languages', 'en.json')), 'utf8');
+        this.ruMessages = JSON.parse(Fs.readFileSync(Path.join(__dirname, '..', 'languages', 'ru.json')), 'utf8');
 
         this.rustplusInstances = new Object();
         this.activeRustplusInstances = new Object();
@@ -164,7 +164,7 @@ class DiscordBot extends Discord.Client {
 
         return intl.formatMessage({
             id: id,
-            defaultMessage: this.enMessages[id]
+            defaultMessage: this.ruMessages[id]
         }, variables);
     }
 
@@ -210,6 +210,8 @@ class DiscordBot extends Discord.Client {
         const firstTime = instance.firstTime;
 
         await require('../discordTools/RegisterSlashCommands')(this, guild);
+        
+        await require('../discordTools/guildJoinHandler')(this, guild);
 
         let category = await require('../discordTools/SetupGuildCategory')(this, guild);
         await require('../discordTools/SetupGuildChannels')(this, guild, category);
@@ -239,7 +241,6 @@ class DiscordBot extends Discord.Client {
         if (firstTime) await PermissionHandler.resetPermissionsAllChannels(this, guild);
 
         this.resetRustplusVariables(guild.id);
-        await guildJoinHandler(this, guild);
     }
 
     async syncCredentialsWithUsers(guild) {
