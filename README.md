@@ -8,7 +8,7 @@
 <a href="https://ko-fi.com/alexemanuelol"><img src="https://img.shields.io/badge/Donate%20a%20Coffee-alexemanuelol-yellow?style=flat&logo=buy-me-a-coffee" alt="donate on ko-fi"/></a>
 
 <p align="center">
-<a href="https://discord.gg/zgnZKKWqCm"><img src="https://img.shields.io/badge/Discord-Fork-%237289DA?style=flat&logo=discord" alt="discord"/></a>
+<a href="https://discord.gg/A7uuTJSM6d"><img src="https://img.shields.io/badge/Discord-Fork-%237289DA?style=flat&logo=discord" alt="discord"/></a>
 <a href="https://www.donationalerts.com/r/mrfinka"><img src="https://img.shields.io/badge/Donate%20in%20public%20bot-MrFiNka-yellow?style=flat&logo=donationalerts" alt="donationalerts"/></a>
 
 <p align="center">
