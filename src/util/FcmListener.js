@@ -518,13 +518,14 @@ async function playerDeath(client, guild, title, message, body, discordUserId, v
     }
 
     // Логируем SteamID жертвы и содержимое content
-    const logText = `[Игрок](https://steamcommunity.com/profiles/${victimSteamId}) был убит игроком [${body.targetName}](https://steamcommunity.com/profiles/${body.targetId})\n${title}`;console.log(`body`, body)
+    const logText = `[Игрок](https://steamcommunity.com/profiles/${victimSteamId}) был убит [${body.targetName}](https://steamcommunity.com/profiles/${body.targetId})\n${title}`;console.log(`body`, body)
 console.log(`victimSteamId`, victimSteamId)
 console.log(`content`, content)
 console.log(`message`, message)
 console.log("Полный объект body:", JSON.stringify(body, null, 2));
 
-if (instance.generalSettings.deathNotify) client.log(client.intlGet(guild.id, 'infoCap'), logText);
+//if (instance.generalSettings.deathNotify) 
+    client.log(client.intlGet(guild.id, 'infoCap'), logText);
 client.log(
     client.intlGet(null, 'infoCap'), 
     `[${victimSteamId}] ${JSON.stringify(content, null, 2)}`
