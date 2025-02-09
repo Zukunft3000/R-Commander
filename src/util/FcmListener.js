@@ -529,6 +529,7 @@ client.log(
     client.intlGet(null, 'infoCap'), 
     `[${victimSteamId}] ${JSON.stringify(content, null, 2)}`
 );
+console.log(`logText`, logText);
 }
 
 async function teamLogin(client, guild, title, message, body) {
