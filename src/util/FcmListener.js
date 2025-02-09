@@ -164,7 +164,8 @@ module.exports = async (client, guild) => {
                 switch (body.type) {
                     case 'death': {
                         client.log('FCM Host', `GuildID: ${guild.id}, SteamID: ${hoster}, player: death`);
-                        playerDeath(client, guild, title, message, body, discordUserId);
+                       // playerDeath(client, guild, title, message, body, discordUserId);
+                        playerDeath(client, guild, title, message, body, discordUserId, hoster);
                     } break;
 
                     default: {
@@ -499,13 +500,14 @@ async function alarmRaidAlarm(client, guild, title, message, body) {
     client.log(client.intlGet(null, 'infoCap'), `${title} ${message}`);
 }
 
-async function playerDeath(client, guild, title, message, body, discordUserId) {
+async function playerDeath(client, guild, title, message, body, discordUserId, victimSteamId) {
     const user = await DiscordTools.getUserById(guild.id, discordUserId);
 
     let png = null;
     if (body.targetId !== '') png = await Scrape.scrapeSteamProfilePicture(client, body.targetId);
     if (png === null) png = isValidUrl(body.img) ? body.img : Constants.DEFAULT_SERVER_IMG;
 
+    // Создаем content для отправки в Discord
     const content = {
         embeds: [DiscordEmbeds.getPlayerDeathEmbed({ title: title }, body, png)],
     };
@@ -514,22 +516,11 @@ async function playerDeath(client, guild, title, message, body, discordUserId) {
         await client.messageSend(user, content);
     }
 
-    // Формирование локализованного сообщения для лога
-    const killerName = body.killerName || client.intlGet(guild.id, 'unknownKiller'); // Локализация для "Неизвестный убийца"
-    const victimName = body.victimName || client.intlGet(guild.id, 'unknownVictim'); // Локализация для "Неизвестная жертва"
-    const weapon = body.weapon || client.intlGet(guild.id, 'unknownWeapon');         // Локализация для "Неизвестное оружие"
+    // Логируем SteamID жертвы и содержимое content
+const logText = `[${victimSteamId}] ${content.embeds[0].description}`;
 
-    const logMessage = client.intlGet(guild.id, 'playerDeathLog', {
-        title,
-        victimName,
-        killerName,
-        weapon,
-    });
-
-    // Логирование информации
-    client.log(client.intlGet(null, 'infoCap'), logMessage);
+client.log(client.intlGet(null, 'infoCap'), logText);
 }
-
 
 
 async function teamLogin(client, guild, title, message, body) {
