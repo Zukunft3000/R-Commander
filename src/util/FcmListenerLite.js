@@ -353,6 +353,7 @@ async function pairingEntityStorageMonitor(client, guild, title, message, body) 
 }
 
 async function playerDeath(client, guild, title, message, body, discordUserId, victimSteamId) {
+    const instance = client.getInstance(guild.id);
     const user = await DiscordTools.getUserById(guild.id, discordUserId);
 
     let png = null;
@@ -369,9 +370,11 @@ async function playerDeath(client, guild, title, message, body, discordUserId, v
     }
 
     // Логируем SteamID жертвы и содержимое content
-const logText = `[${victimSteamId}] ${content.embeds[0].description}`;
-
-client.log(client.intlGet(null, 'infoCap'), logText);
+const logText = `[${body.targetName}] ${content.embeds[0].description}`;
+console.log(`body`, body)
+console.log(`content`, content)
+console.log(`content`, message)
+if (instance.generalSettings.deathNotify) client.log(client.intlGet(guild.id, 'infoCap'), logText);
 }
 
 
