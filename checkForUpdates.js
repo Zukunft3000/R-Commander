@@ -62,7 +62,7 @@ async function onBotStartup() {
 
 
 
-function checkForUpdates() {
+async function checkForUpdates() {
     const remoteUrl = 'https://raw.githubusercontent.com/alexemanuelol/rustplusplus/main/package.json';
     const local = localPackage;
 
