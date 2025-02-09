@@ -16,7 +16,7 @@ const DiscordBot = require('./src/structures/DiscordBot');
 const { onBotStartup, checkForUpdates } = require('./checkForUpdates');
 (async () => {
     await onBotStartup();
-    checkForUpdates();
+    await checkForUpdates();
 })();
 
 createMissingDirectories();
