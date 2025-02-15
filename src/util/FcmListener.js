@@ -584,7 +584,7 @@ async function checkTokenExpiration(client) {
                 const user = await client.users.fetch(discordUserId).catch(() => null);
                 if (user) {
                     const embed = DiscordEmbeds.getTokenExpiredEmbed(
-                        guild.id,
+                        guild,
                         user.username || 'Unknown User'
                     );
 

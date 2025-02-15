@@ -580,7 +580,7 @@ module.exports = {
         });
     },
     
-    getTokenExpiredEmbed: function (guildId, username) {
+    getTokenExpiredEmbed: function (guild, username) {
         return module.exports.getEmbed({
             color: Constants.COLOR_WARNING, // Цвет предупреждающего сообщения
                         timestamp: true,               // Добавление текущей даты и времени

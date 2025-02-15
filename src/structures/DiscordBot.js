@@ -48,7 +48,7 @@ class DiscordBot extends Discord.Client {
         this.guildIntl = {};
         this.botIntl = null;
         this.enIntl = null;
-        this.ruMessages = JSON.parse(Fs.readFileSync(Path.join(__dirname, '..', 'languages', 'ru.json'), 'utf8'));
+        this.enMessages = JSON.parse(Fs.readFileSync(Path.join(__dirname, '..', 'languages', 'en.json')), 'utf8');
 
         this.rustplusInstances = new Object();
         this.activeRustplusInstances = new Object();
@@ -106,55 +106,40 @@ class DiscordBot extends Discord.Client {
     }
 
     loadEnIntl() {
-        try {
-            const language = 'ru';
-            const path = Path.join(__dirname, '..', 'languages', `${language}.json`);
-            const messages = JSON.parse(Fs.readFileSync(path, 'utf8'));
-            const cache = FormatJS.createIntlCache();
-            this.enIntl = FormatJS.createIntl({
-                locale: language,
-                defaultLocale: 'ru',
-                messages: messages
-            }, cache);
-        } catch (e) {
-            console.error('Failed to load enIntl:', e);
-            this.enIntl = FormatJS.createIntl({ locale: 'ru', defaultLocale: 'ru' });
-        }
+        const language = 'en';
+        const path = Path.join(__dirname, '..', 'languages', `${language}.json`);
+        const messages = JSON.parse(Fs.readFileSync(path, 'utf8'));
+        const cache = FormatJS.createIntlCache();
+        this.enIntl = FormatJS.createIntl({
+            locale: language,
+            defaultLocale: 'en',
+            messages: messages
+        }, cache);
     }
 
     loadBotIntl() {
-        try {
-            const language = Config.general.language;
-            const path = Path.join(__dirname, '..', 'languages', `${language}.json`);
-            const messages = JSON.parse(Fs.readFileSync(path, 'utf8'));
-            const cache = FormatJS.createIntlCache();
-            this.botIntl = FormatJS.createIntl({
-                locale: language,
-                defaultLocale: 'ru',
-                messages: messages
-            }, cache);
-        } catch (e) {
-            console.error('Failed to load botIntl:', e);
-            this.botIntl = this.enIntl; // Fallback to Russian
-        }
+        const language = Config.general.language;
+        const path = Path.join(__dirname, '..', 'languages', `${language}.json`);
+        const messages = JSON.parse(Fs.readFileSync(path, 'utf8'));
+        const cache = FormatJS.createIntlCache();
+        this.botIntl = FormatJS.createIntl({
+            locale: language,
+            defaultLocale: 'en',
+            messages: messages
+        }, cache);
     }
 
     loadGuildIntl(guildId) {
-        try {
-            const instance = InstanceUtils.readInstanceFile(guildId);
-            const language = instance.generalSettings.language;
-            const path = Path.join(__dirname, '..', 'languages', `${language}.json`);
-            const messages = JSON.parse(Fs.readFileSync(path, 'utf8'));
-            const cache = FormatJS.createIntlCache();
-            this.guildIntl[guildId] = FormatJS.createIntl({
-                locale: language,
-                defaultLocale: 'ru',
-                messages: messages
-            }, cache);
-        } catch (e) {
-            console.error(`Failed to load guildIntl for ${guildId}:`, e);
-            this.guildIntl[guildId] = this.botIntl || this.enIntl;
-        }
+        const instance = InstanceUtils.readInstanceFile(guildId);
+        const language = instance.generalSettings.language;
+        const path = Path.join(__dirname, '..', 'languages', `${language}.json`);
+        const messages = JSON.parse(Fs.readFileSync(path, 'utf8'));
+        const cache = FormatJS.createIntlCache();
+        this.guildIntl[guildId] = FormatJS.createIntl({
+            locale: language,
+            defaultLocale: 'en',
+            messages: messages
+        }, cache);
     }
 
     loadGuildsIntl() {
@@ -165,20 +150,21 @@ class DiscordBot extends Discord.Client {
 
     intlGet(guildId, id, variables = {}) {
         let intl = null;
-        if (guildId && guildId !== 'ru') {
+        if (guildId && guildId !== 'en') {
             intl = this.guildIntl[guildId];
-        } else {
-            intl = (guildId === 'ru') ? this.enIntl : this.botIntl;
         }
-    
-        if (!intl) {
-            console.error('intl is undefined, using fallback');
-            intl = this.enIntl || FormatJS.createIntl({ locale: 'ru' });
+        else {
+            if (guildId === 'en') {
+                intl = this.enIntl;
+            }
+            else {
+                intl = this.botIntl;
+            }
         }
-    
+
         return intl.formatMessage({
             id: id,
-            defaultMessage: this.ruMessages[id] || id // Fallback to message ID
+            defaultMessage: this.enMessages[id]
         }, variables);
     }
 
@@ -224,7 +210,6 @@ class DiscordBot extends Discord.Client {
         const firstTime = instance.firstTime;
 
         await require('../discordTools/RegisterSlashCommands')(this, guild);
-        
         await require('../discordTools/guildJoinHandler')(this, guild);
 
         let category = await require('../discordTools/SetupGuildCategory')(this, guild);
