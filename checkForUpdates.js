@@ -12,7 +12,7 @@ const previousErrors = new Set();
 
 async function sendToDiscordWebhook(message) {
     try {
-//        await axios.post(Config.discord.webhookerror, { content: message, });
+        await axios.post(Config.discord.webhookerror, { content: message, });
     } catch (error) {
         console.error('Ошибка при отправке сообщения в Discord вебхук:', error);
     }
