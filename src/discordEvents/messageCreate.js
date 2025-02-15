@@ -20,10 +20,48 @@
 
 const DiscordCommandHandler = require('../handlers/discordCommandHandler.js');
 const DiscordTools = require('../discordTools/discordTools');
+const { exec } = require('child_process');
+const path = require('path');
 
 module.exports = {
     name: 'messageCreate',
     async execute(client, message) {
+        // Обработка вебхуков GitHub
+        if (message.channelId === '1330300278741798924' && message.webhookId) {
+            const content = message.content.toLowerCase();
+            
+            // Проверка паттернов GitHub-коммитов
+            const commitPatterns = [
+                /\b(commit|committed|merged|pushed)\b/i,
+                /\b[0-9a-f]{7}\b/, // Хэш коммита (сокращенный)
+                /github\.com\/[^\/]+\/[^\/]+\/commit\//,
+                /\[.*:.*\]\s*\d+\s*new commit/
+            ];
+
+            const isGitHubCommit = commitPatterns.some(pattern => 
+                pattern.test(message.content)
+            );
+
+            if (isGitHubCommit) {
+                try {
+                    // Логирование перед перезагрузкой
+                    client.log(client.intlGet(null, 'infoCap'), 
+                        'Обнаружен коммит GitHub, инициирую перезагрузку...');
+
+                    // Отправить подтверждение
+                    await message.channel.send('🔄 Перезапуск бота из-за обновления...');
+
+                    // Перезапуск процесса
+                    process.exit(0);
+                } 
+                catch (e) {
+                    console.error('Ошибка при обработке вебхука:', e);
+                }
+                return;
+            }
+        }
+
+        // Оригинальная логика обработки сообщений
         const instance = client.getInstance(message.guild.id);
         const rustplus = client.rustplusInstances[message.guild.id];
 
