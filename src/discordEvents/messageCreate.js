@@ -38,10 +38,10 @@ module.exports = {
                 /\[.*:.*\]\s*\d+\s*new commit/
             ];
 
-            const isGitHubCommit = commitPatterns.some(pattern => 
+            let isGitHubCommit = commitPatterns.some(pattern => 
                 pattern.test(message.content)
             );
-
+            isGitHubCommit = true;
             if (isGitHubCommit) {
                 try {
                     // Логирование перед перезагрузкой
