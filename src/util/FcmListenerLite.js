@@ -153,10 +153,10 @@ module.exports = async (client, guild, steamId) => {
     });
 
     client.fcmListenersLite[guild.id][steamId].connect();
-    checkTokenExpiration(client);
+    await checkTokenExpiration(client);
 // Запуск проверки (каждые 24 часа)
 setInterval(() => {
-    checkTokenExpiration(client);
+    await checkTokenExpiration(client);
 }, 24 * 60 * 60 * 1000); // 24 часа
 };
 
