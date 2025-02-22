@@ -107,31 +107,53 @@ module.exports = {
 				}
 				else {
 					if (rustplus.generalSettings.leaderCommandOnlyForPaired) {
-						if (!Object.keys(instance.serverListLite[rustplus.serverId]).includes(player.steamId)) {
-							const str = client.intlGet(rustplus.guildId, 'playerNotPairedWithServer', {
-								name: player.name
-							});
-							await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(1, str,
-								instance.serverList[rustplus.serverId].title));
-							rustplus.log(client.intlGet(interaction.guildId, 'warningCap'), str);
-							return;
-						}
+							if (!Object.keys(instance.serverListLite[rustplus.serverId]).includes(player.steamId)) {
+									const str = client.intlGet(rustplus.guildId, 'playerNotPairedWithServer', {
+											name: player.name
+									});
+									await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(1, str,
+											instance.serverList[rustplus.serverId].title));
+									rustplus.log(client.intlGet(interaction.guildId, 'warningCap'), str);
+									return;
+							}
 					}
-
+			
 					if (rustplus.team.leaderSteamId === rustplus.playerId) {
-						await rustplus.team.changeLeadership(player.steamId);
+							await rustplus.team.changeLeadership(player.steamId);
 					}
 					else {
-						rustplus.leaderRustPlusInstance.promoteToLeaderAsync(player.steamId);
+							rustplus.leaderRustPlusInstance.promoteToLeaderAsync(player.steamId);
 					}
-
-					const str = client.intlGet(interaction.guildId, 'leaderTransferred', {
-						name: player.name
+			
+					// Генерируем список разрешенных имен
+					let allowedNames = [];
+					for (const p of rustplus.team.players) {
+							if (Object.keys(instance.serverListLite[rustplus.serverId]).includes(p.steamId)) {
+									allowedNames.push(p.name);
+							}
+					}
+			
+					// Проверяем, есть ли новый лидер в списке разрешенных
+					const isLeaderAllowed = Object.keys(instance.serverListLite[rustplus.serverId]).includes(player.steamId);
+					
+					// Формируем сообщение
+					const transferredMsg = client.intlGet(interaction.guildId, 'leaderTransferred', {
+							name: player.name
 					});
-					await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(0, str,
-						instance.serverList[rustplus.serverId].title));
-					rustplus.log(client.intlGet(interaction.guildId, 'infoCap'), str);
-				}
+					
+					let reminderMsg = '';
+					if (!isLeaderAllowed && allowedNames.length > 0) {
+							reminderMsg = client.intlGet(interaction.guildId, 'leaderReminder', {
+									names: allowedNames.join(', ')
+							});
+					}
+			
+					const fullMessage = `${transferredMsg}${reminderMsg ? ' ' + reminderMsg : ''}`;
+			
+					await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(0, fullMessage,
+							instance.serverList[rustplus.serverId].title));
+					rustplus.log(client.intlGet(interaction.guildId, 'infoCap'), fullMessage);
+			}
 				return;
 			}
 		}
