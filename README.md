@@ -29,7 +29,9 @@ A NodeJS Discord Bot that uses the [rustplus.js](https://github.com/liamcottle/r
 ## 🚀 Public Bot (Ready-to-Use)
 
 For instant use without self-hosting, a public bot instance is available:  
-[![Add to Discord](https://img.shields.io/badge/-Add_to_Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/oauth2/authorize?client_id=1324833357124866119&permissions=8&integration_type=0&scope=applications.commands+bot)
+#1 [![Add to Discord](https://img.shields.io/badge/-Add_to_Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/oauth2/authorize?client_id=1324833357124866119&permissions=8&integration_type=0&scope=applications.commands+bot)
+
+#2 [![Add to Discord](https://img.shields.io/badge/-Add_to_Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/oauth2/authorize?client_id=1265023738412273724)
 
 *The bot is pre-configured and ready to use!*
 
