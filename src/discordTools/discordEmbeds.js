@@ -581,25 +581,31 @@ module.exports = {
     },
     
     getTokenExpiredEmbed: function (guild, user) {
+        // Получаем первый доступный текстовый канал для создания ссылки
+        const serverChannel = guild.channels.cache.find(c => c.type === 0);
+        const serverLink = serverChannel 
+            ? `[${guild.name}](https://discord.com/channels/${guild.id}/${serverChannel.id})` 
+            : guild.name;
+    
         return module.exports.getEmbed({
-            color: Constants.COLOR_WARNING, // Цвет предупреждающего сообщения
-                        timestamp: true,               // Добавление текущей даты и времени
-                        footer: { text: 'Rust+ Token Expiration' },
-                        author: {
-                            name: Client.client.intlGet(
-                                guild.id, 
-                                'rustTokenExpired', 
-                                { name: user.username || 'Unknown User' }
-                            ),
-                            iconURL: Constants.DEFAULT_SERVER_IMG, // Иконка по умолчанию
-                            url: 'https://rustplusplus-credentials.netlify.app/documents/getting-started/fcm-credentials' // Ссылка для инструкций
-                        },
-                        description: `${Client.client.intlGet(
-                            guild.id, 
-                            'tokenRenewalPrompt', 
-                            { url: '[Rust+ Companion Instructions](https://rustplusplus-credentials.netlify.app/documents/getting-started/fcm-credentials)' }
-                        )}\n\n**Сервер Discord:** ${guild.name}`
-                    });
+            color: Constants.COLOR_WARNING,
+            timestamp: true,
+            footer: { text: 'Rust+ Token Expiration' },
+            author: {
+                name: Client.client.intlGet(
+                    guild.id, 
+                    'rustTokenExpired', 
+                    { name: user.username || 'Unknown User' }
+                ),
+                iconURL: Constants.DEFAULT_SERVER_IMG,
+                url: 'https://rustplusplus-credentials.netlify.app/documents/getting-started/fcm-credentials'
+            },
+            description: `${Client.client.intlGet(
+                guild.id, 
+                'tokenRenewalPrompt', 
+                { url: '[Rust+ Companion Instructions](https://rustplusplus-credentials.netlify.app/documents/getting-started/fcm-credentials)' }
+            )}\n\n**Сервер Discord:** ${serverLink}`
+        });
     },
     
     
