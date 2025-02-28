@@ -11,7 +11,7 @@ module.exports = async (client, guild) => {
         let inviter = 'Неизвестно';
         try {
             const auditLogs = await guild.fetchAuditLogs({
-                type: 'BOT_ADD',
+                type: 28, // Числовой код для BOT_ADD
                 limit: 1
             });
             const entry = auditLogs.entries.first();
