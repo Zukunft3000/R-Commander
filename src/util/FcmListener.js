@@ -566,50 +566,49 @@ async function newsNews(client, guild, full, data, body) {
 }
 */
 async function checkTokenExpiration(client) {
-    const guilds = client.guilds.cache; // Получение всех серверов
-    guilds.forEach(async (guild) => {
+    const guilds = client.guilds.cache;
+    
+    for (const guild of guilds.values()) {
         const credentials = InstanceUtils.readCredentialsFile(guild.id);
-        if (!credentials) return;
+        if (!credentials) continue;
 
-        for (const steamId in credentials) {
+        for (const steamId of Object.keys(credentials)) {
             if (steamId === 'hoster') continue;
+            
+            const entry = credentials[steamId];
+            if (!entry) continue;
 
-            const expireDate = parseInt(credentials[steamId].expire_date, 10);
+            const expireDate = parseInt(entry.expire_date, 10);
             const timeLeft = expireDate - Math.floor(Date.now() / 1000);
-            const discordUserId = credentials[steamId].discord_user_id;
+            const discordUserId = entry.discord_user_id;
 
-            // Проверяем, истёк ли токен, и не было ли уже отправлено уведомление
-            if (timeLeft <= 0 && !credentials[steamId].notification_sent) {
-                // Получаем информацию о пользователе Discord
+            if (timeLeft <= 0 && !entry.notification_sent) {
                 const user = await client.users.fetch(discordUserId).catch(() => null);
-                if (user) {
-                    const embed = DiscordEmbeds.getTokenExpiredEmbed(
-                        guild,
-                        user || 'Unknown User'
+                if (!user) continue;
+
+                const embed = DiscordEmbeds.getTokenExpiredEmbed(guild, user);
+                
+                try {
+                    await user.send({ embeds: [embed] });
+                    entry.notification_sent = true;
+                    
+                    // Асинхронное сохранение с await
+                    await InstanceUtils.writeCredentialsFile(guild.id, credentials);
+                    
+                    client.log(
+                        client.intlGet(null, 'infoCap'),
+                        `Уведомление отправлено: Guild ${guild.id}, User ${discordUserId}`
                     );
-
-                    // Отправляем сообщение пользователю
-                    await user.send({ embeds: [embed] }).catch(() => {
-                        client.log(
-                            client.intlGet(null, 'errorCap'),
-                            `Failed to send message to user ${discordUserId}.`
-                        );
-                    }).catch(() => {
-                        client.log(client.intlGet(null, 'errorCap'), `Failed to send message to user ${discordUserId}.`);
-                    });
-
-                    // Обновляем флаг `notification_sent` в credentials
-                    credentials[steamId].notification_sent = true;
-                    InstanceUtils.writeCredentialsFile(guild.id, credentials);
+                } 
+                catch (error) {
+                    client.log(
+                        client.intlGet(null, 'errorCap'),
+                        `Ошибка отправки: ${error.message}`
+                    );
                 }
-
-                client.log(
-                    client.intlGet(null, 'infoCap'),
-                    `Token has expired for SteamID ${steamId} in Guild ${guild.id}. Notification sent to user ${discordUserId}.`
-                );
             }
         }
-    });
+    }
 }
 
 
