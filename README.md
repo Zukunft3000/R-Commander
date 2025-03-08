@@ -8,7 +8,7 @@
 <a href="https://ko-fi.com/alexemanuelol"><img src="https://img.shields.io/badge/Donate%20a%20Coffee-alexemanuelol-yellow?style=flat&logo=buy-me-a-coffee" alt="donate on ko-fi"/></a>
 
 <p align="center">
-<a href="https://discord.gg/zgnZKKWqCm"><img src="https://img.shields.io/badge/Discord-Fork-%237289DA?style=flat&logo=discord" alt="discord"/></a>
+<a href="https://discord.gg/A7uuTJSM6d"><img src="https://img.shields.io/badge/Discord-Fork-%237289DA?style=flat&logo=discord" alt="discord"/></a>
 <a href="https://www.donationalerts.com/r/mrfinka"><img src="https://img.shields.io/badge/Donate%20in%20public%20bot-MrFiNka-yellow?style=flat&logo=donationalerts" alt="donationalerts"/></a>
 
 <p align="center">
@@ -26,6 +26,14 @@
 
 A NodeJS Discord Bot that uses the [rustplus.js](https://github.com/liamcottle/rustplus.js) library to utilize the power of the [Rust+ Companion App](https://rust.facepunch.com/companion) with additional Quality-of-Life features.
 
+## 🚀 Public Bot (Ready-to-Use)
+
+For instant use without self-hosting, a public bot instance is available:  
+#1 [![Add to Discord](https://img.shields.io/badge/-Add_to_Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/oauth2/authorize?client_id=1324833357124866119&permissions=8&integration_type=0&scope=applications.commands+bot)
+
+#2 [![Add to Discord](https://img.shields.io/badge/-Add_to_Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/oauth2/authorize?client_id=1265023738412273724)
+
+*The bot is pre-configured and ready to use!*
 
 ## **How-to Setup Video**
 

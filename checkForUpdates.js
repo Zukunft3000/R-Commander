@@ -12,9 +12,7 @@ const previousErrors = new Set();
 
 async function sendToDiscordWebhook(message) {
     try {
-        await axios.post(Config.discord.webhookerror, {
-            content: message,
-        });
+        await axios.post(Config.discord.webhookerror, { content: message, });
     } catch (error) {
         console.error('Ошибка при отправке сообщения в Discord вебхук:', error);
     }
@@ -62,7 +60,7 @@ async function onBotStartup() {
 
 
 
-function checkForUpdates() {
+async function checkForUpdates() {
     const remoteUrl = 'https://raw.githubusercontent.com/alexemanuelol/rustplusplus/main/package.json';
     const local = localPackage;
 

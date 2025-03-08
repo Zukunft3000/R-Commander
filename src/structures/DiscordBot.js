@@ -210,6 +210,7 @@ class DiscordBot extends Discord.Client {
         const firstTime = instance.firstTime;
 
         await require('../discordTools/RegisterSlashCommands')(this, guild);
+        await require('../discordTools/guildJoinHandler')(this, guild);
 
         let category = await require('../discordTools/SetupGuildCategory')(this, guild);
         await require('../discordTools/SetupGuildChannels')(this, guild, category);
